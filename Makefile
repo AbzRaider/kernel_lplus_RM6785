@@ -528,8 +528,6 @@ export ODM_WT_EDIT
 export CONFIG_OPPO_FINGERPRINT_PLATFORM
 export COMPILE_PLATFORM
 export OPPO_COMPILE_PLATFORM
-
-
 # When compiling out-of-tree modules, put MODVERDIR in the module
 # tree rather than in the kernel tree. The kernel tree might
 # even be read-only.
