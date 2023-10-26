@@ -1439,7 +1439,7 @@
  *       COUNTRY_CHANNEL_TXPOWER_LIMIT_TYPE_COMP_11AG_11N
  *------------------------------------------------------------------------------
  */
-#define CFG_SUPPORT_DYNA_TX_PWR_CTRL_OFDM_SETTING 0
+#define CFG_SUPPORT_DYNA_TX_PWR_CTRL_OFDM_SETTING 1
 
 /*------------------------------------------------------------------------------
  * tx power control:
