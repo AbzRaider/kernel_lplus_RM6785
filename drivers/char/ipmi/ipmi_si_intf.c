@@ -2013,7 +2013,7 @@ static int hardcode_find_bmc(void)
 			return -ENOMEM;
 
 		info->addr_source = SI_HARDCODED;
-		pr_info(PFX "probing via hardcoded address\n");
+		pr_debug(PFX "probing via hardcoded address\n");
 
 		if (!si_type[i] || strcmp(si_type[i], "kcs") == 0) {
 			info->si_type = SI_KCS;
@@ -2183,7 +2183,7 @@ static int try_init_spmi(struct SPMITable *spmi)
 	int rv;
 
 	if (spmi->IPMIlegacy != 1) {
-		pr_info(PFX "Bad SPMI legacy %d\n", spmi->IPMIlegacy);
+		pr_debug(PFX "Bad SPMI legacy %d\n", spmi->IPMIlegacy);
 		return -ENODEV;
 	}
 
@@ -2194,7 +2194,7 @@ static int try_init_spmi(struct SPMITable *spmi)
 	}
 
 	info->addr_source = SI_SPMI;
-	pr_info(PFX "probing via SPMI\n");
+	pr_debug(PFX "probing via SPMI\n");
 
 	/* Figure out the interface type. */
 	switch (spmi->InterfaceType) {
@@ -2211,7 +2211,7 @@ static int try_init_spmi(struct SPMITable *spmi)
 		kfree(info);
 		return -EIO;
 	default:
-		pr_info(PFX "Unknown ACPI/SPMI SI type %d\n",
+		pr_debug(PFX "Unknown ACPI/SPMI SI type %d\n",
 			spmi->InterfaceType);
 		kfree(info);
 		return -EIO;
@@ -2253,7 +2253,7 @@ static int try_init_spmi(struct SPMITable *spmi)
 	}
 	info->io.addr_data = spmi->addr.address;
 
-	pr_info("ipmi_si: SPMI: %s %#lx regsize %d spacing %d irq %d\n",
+	pr_debug("ipmi_si: SPMI: %s %#lx regsize %d spacing %d irq %d\n",
 		(info->io.addr_type == IPMI_IO_ADDR_SPACE) ? "io" : "mem",
 		info->io.addr_data, info->io.regsize, info->io.regspacing,
 		info->irq);
@@ -2350,7 +2350,7 @@ static int dmi_ipmi_probe(struct platform_device *pdev)
 	}
 
 	info->addr_source = SI_SMBIOS;
-	pr_info(PFX "probing via SMBIOS\n");
+	pr_debug(PFX "probing via SMBIOS\n");
 
 	switch (type) {
 	case IPMI_DMI_TYPE_KCS:
@@ -2388,7 +2388,7 @@ static int dmi_ipmi_probe(struct platform_device *pdev)
 
 	info->dev = &pdev->dev;
 
-	pr_info("ipmi_si: SMBIOS: %s %#lx regsize %d spacing %d irq %d\n",
+	pr_debug("ipmi_si: SMBIOS: %s %#lx regsize %d spacing %d irq %d\n",
 		(info->io.addr_type == IPMI_IO_ADDR_SPACE) ? "io" : "mem",
 		info->io.addr_data, info->io.regsize, info->io.regspacing,
 		info->irq);
@@ -3499,7 +3499,7 @@ static int add_smi(struct smi_info *new_smi)
 		}
 	}
 
-	pr_info(PFX "Adding %s-specified %s state machine\n",
+	pr_debug(PFX "Adding %s-specified %s state machine\n",
 		ipmi_addr_src_to_str(new_smi->addr_source),
 		si_to_str[new_smi->si_type]);
 
@@ -3526,7 +3526,7 @@ static int try_smi_init(struct smi_info *new_smi)
 	int i;
 	char *init_name = NULL;
 
-	pr_info(PFX "Trying %s-specified %s state machine at %s address 0x%lx, slave address 0x%x, irq %d\n",
+	pr_debug(PFX "Trying %s-specified %s state machine at %s address 0x%lx, slave address 0x%x, irq %d\n",
 		ipmi_addr_src_to_str(new_smi->addr_source),
 		si_to_str[new_smi->si_type],
 		addr_space_to_str[new_smi->io.addr_type],
@@ -3789,7 +3789,7 @@ static int init_ipmi_si(void)
 		}
 	}
 
-	pr_info("IPMI System Interface driver.\n");
+	pr_debug("IPMI System Interface driver.\n");
 
 	/* If the user gave us a device, they presumably want us to use it */
 	if (!hardcode_find_bmc())
