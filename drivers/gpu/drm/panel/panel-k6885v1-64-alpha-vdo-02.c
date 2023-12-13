@@ -1357,7 +1357,7 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 	ctx->hbm_en = false;
 
 	register_device_proc("lcd", "AMS644VA04_MTK04", "samsung1024");
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }

@@ -1908,7 +1908,7 @@ static void mtk_output_dsi_enable(struct mtk_dsi *dsi,
 			/* shangruofan@PSW.MM.DisplayDriver, 2019/12/13, add for tp gesture*/
 			event.info  = NULL;
 			event.data = &blank_mode;
-			pr_info("%s for gesture\n", __func__);
+			pr_debug("%s for gesture\n", __func__);
 			/* liwei.a@PSW.MM.DisplayDriver, 2020/10/17, add for tp gesture only samsung TP*/
 			fb_notifier_call_chain(FB_EARLY_EVENT_BLANK, &event);
 			fb_notifier_call_chain(FB_EVENT_BLANK, &event);
@@ -6044,12 +6044,12 @@ static int mtk_dsi_probe(struct platform_device *pdev)
 	phy_power_on(dsi->phy);
 	ret = clk_prepare_enable(dsi->engine_clk);
 	if (ret < 0)
-		pr_info("%s Failed to enable engine clock: %d\n",
+		pr_debug("%s Failed to enable engine clock: %d\n",
 			__func__, ret);
 
 	ret = clk_prepare_enable(dsi->digital_clk);
 	if (ret < 0)
-		pr_info("%s Failed to enable digital clock: %d\n",
+		pr_debug("%s Failed to enable digital clock: %d\n",
 			__func__, ret);
 #endif
 	dsi->output_en = true;

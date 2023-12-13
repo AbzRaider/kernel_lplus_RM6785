@@ -141,7 +141,7 @@ static int _lcm_i2c_write_bytes(unsigned char addr, unsigned char value)
 	write_data[1] = value;
 	ret = i2c_master_send(client, write_data, 2);
 	if (ret < 0)
-		pr_info("[LCM][ERROR] _lcm_i2c write data fail !!\n");
+		pr_debug("[LCM][ERROR] _lcm_i2c write data fail !!\n");
 
 	return ret;
 }
@@ -225,11 +225,11 @@ static void jdi_panel_get_data(struct jdi *ctx)
 {
 	u8 buffer[3] = {0};
 	static int ret;
-	pr_info("%s+\n", __func__);
+	pr_debug("%s+\n", __func__);
 
 	if (ret == 0) {
 		ret = jdi_dcs_read(ctx, 0x0A, buffer, 1);
-		pr_info("%s  0x%08x\n", __func__,buffer[0] | (buffer[1] << 8));
+		pr_debug("%s  0x%08x\n", __func__,buffer[0] | (buffer[1] << 8));
 		dev_info(ctx->dev, "return %d data(0x%08x) to dsi engine\n",
 			 ret, buffer[0] | (buffer[1] << 8));
 	}
@@ -273,7 +273,7 @@ static void jdi_panel_init(struct jdi *ctx)
 {
 	int version;
 	version = get_PCB_Version();
-	pr_info("%s+ PCB_version:%d\n", __func__,version);
+	pr_debug("%s+ PCB_version:%d\n", __func__,version);
 	//add for cabc
 	jdi_dcs_write_seq_static(ctx, 0xFF,0x23);
 	jdi_dcs_write_seq_static(ctx, 0XFB,0x01);
@@ -685,7 +685,7 @@ static void jdi_panel_init(struct jdi *ctx)
 	/* Display On*/
 	jdi_dcs_write_seq_static(ctx, 0x29);
 	msleep(10);
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 }
 #else
 static void jdi_panel_init(struct jdi *ctx)
@@ -883,7 +883,7 @@ static void jdi_panel_init(struct jdi *ctx)
 	/* Display On*/
 	jdi_dcs_write_seq_static(ctx, 0x29);
 	msleep(10);
-	pr_info("%s_420-\n", __func__);
+	pr_debug("%s_420-\n", __func__);
 }
 #endif
 
@@ -893,7 +893,7 @@ static int jdi_disable(struct drm_panel *panel)
 
 	if (!ctx->enabled)
 		return 0;
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	if (ctx->backlight) {
 		ctx->backlight->props.power = FB_BLANK_POWERDOWN;
 		backlight_update_status(ctx->backlight);
@@ -908,7 +908,7 @@ static int jdi_unprepare(struct drm_panel *panel)
 {
 
 	struct jdi *ctx = panel_to_jdi(panel);
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 	if (!ctx->prepared)
 		return 0;
@@ -919,14 +919,14 @@ static int jdi_unprepare(struct drm_panel *panel)
 
 /* #ifdef OPLUS_BUG_STABILITY */
 /* shifan@PSW.BSP.TP.Function, 2020/02/20, Add for TP common code */
-    pr_info("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
+    pr_debug("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
     if ((0 == tp_gesture_enable_flag())||(esd_flag == 1)) {
 /* #endif */ /* OPLUS_BUG_STABILITY */
         ctx->reset_gpio = devm_gpiod_get(ctx->dev, "reset", GPIOD_OUT_HIGH);
         gpiod_set_value(ctx->reset_gpio, 0);
         devm_gpiod_put(ctx->dev, ctx->reset_gpio);
 
-        pr_info("%s: going to cut off power \n", __func__);
+        pr_debug("%s: going to cut off power \n", __func__);
         ctx->bias_neg = devm_gpiod_get_index(ctx->dev,
                 "bias", 1, GPIOD_OUT_HIGH);
         gpiod_set_value(ctx->bias_neg, 0);
@@ -962,7 +962,7 @@ static int lcm_panel_poweron(struct drm_panel *panel)
 	struct jdi *ctx = panel_to_jdi(panel);
 	int ret;
 
-	pr_info("%s+\n", __func__);
+	pr_debug("%s+\n", __func__);
 
 	//add for ldo
 	ctx->bias_en = devm_gpiod_get(ctx->dev, "ldo", GPIOD_OUT_HIGH);
@@ -982,7 +982,7 @@ static int lcm_panel_poweron(struct drm_panel *panel)
 	devm_gpiod_put(ctx->dev, ctx->bias_neg);
 	_lcm_i2c_write_bytes(0x0, 0xf);
 	_lcm_i2c_write_bytes(0x1, 0xf);
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 	return 0;
 }
 static int lcm_panel_poweroff(struct drm_panel *panel)
@@ -995,7 +995,7 @@ static int jdi_prepare(struct drm_panel *panel)
 	struct jdi *ctx = panel_to_jdi(panel);
 	int ret;
 
-	pr_info("%s+\n", __func__);
+	pr_debug("%s+\n", __func__);
 	if (ctx->prepared)
 		return 0;
 
@@ -1043,7 +1043,7 @@ static int jdi_prepare(struct drm_panel *panel)
 		lcd_queue_load_tp_fw();
 	}
 /* #endif */ /* OPLUS_BUG_STABILITY */
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 	return ret;
 }
 
@@ -1719,14 +1719,14 @@ static int jdi_probe(struct mipi_dsi_device *dsi)
 		endpoint = of_graph_get_next_endpoint(dsi_node, NULL);
 		if (endpoint) {
 			remote_node = of_graph_get_remote_port_parent(endpoint);
-			pr_info("device_node name:%s\n", remote_node->name);
+			pr_debug("device_node name:%s\n", remote_node->name);
                    }
 	}
 	if (remote_node != dev->of_node) {
-		pr_info("%s+ skip probe due to not current lcm.\n", __func__);
+		pr_debug("%s+ skip probe due to not current lcm.\n", __func__);
 		return 0;
 	}
-	pr_info("%s+\n", __func__);
+	pr_debug("%s+\n", __func__);
 	ctx = devm_kzalloc(dev, sizeof(struct jdi), GFP_KERNEL);
 	if (!ctx)
 		return -ENOMEM;
@@ -1796,9 +1796,9 @@ static int jdi_probe(struct mipi_dsi_device *dsi)
     ctx->is_normal_mode = true;
     if( META_BOOT == get_boot_mode() || FACTORY_BOOT == get_boot_mode() )
         ctx->is_normal_mode = false;
-    pr_info("%s: is_normal_mode = %d \n", __func__, ctx->is_normal_mode);
+    pr_debug("%s: is_normal_mode = %d \n", __func__, ctx->is_normal_mode);
 /* #endif */ /* OPLUS_BUG_STABILITY */
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }
@@ -1807,7 +1807,7 @@ static int jdi_remove(struct mipi_dsi_device *dsi)
 {
 	struct jdi *ctx = mipi_dsi_get_drvdata(dsi);
 	//NVT H -> L
-	pr_info(" %s will reset pin to L\n", __func__);
+	pr_debug(" %s will reset pin to L\n", __func__);
 	ctx->reset_gpio = devm_gpiod_get(ctx->dev, "reset", GPIOD_OUT_HIGH);
 	gpiod_set_value(ctx->reset_gpio, 0);
 	devm_gpiod_put(ctx->dev, ctx->reset_gpio);

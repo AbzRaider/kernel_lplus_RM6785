@@ -989,7 +989,7 @@ int rv_display_clock_voltage_request(struct pp_hwmgr *hwmgr,
 		msg = PPSMC_MSG_SetHardMinFclkByFreq;
 		break;
 	default:
-		pr_info("[DisplayClockVoltageRequest]Invalid Clock Type!");
+		pr_debug("[DisplayClockVoltageRequest]Invalid Clock Type!");
 		return -EINVAL;
 	}
 

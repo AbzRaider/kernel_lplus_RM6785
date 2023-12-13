@@ -151,7 +151,7 @@ static int _lcm_i2c_write_bytes(unsigned char addr, unsigned char value)
 	write_data[1] = value;
 	ret = i2c_master_send(client, write_data, 2);
 	if (ret < 0)
-		pr_info("[LCM][ERROR] _lcm_i2c write data fail !!\n");
+		pr_debug("[LCM][ERROR] _lcm_i2c write data fail !!\n");
 
 	return ret;
 }
@@ -351,7 +351,7 @@ static int lcm_panel_bias_disable(void)
 
 static void lcm_panel_init(struct lcm *ctx)
 {
-	pr_info("SYQ %s+\n", __func__);
+	pr_debug("SYQ %s+\n", __func__);
 	lcm_dcs_write_seq_static(ctx, 0xFF, 0x10);
 	lcm_dcs_write_seq_static(ctx, 0xFB, 0x01);
 	lcm_dcs_write_seq_static(ctx, 0xB0, 0x00);
@@ -556,7 +556,7 @@ static void lcm_panel_init(struct lcm *ctx)
 	msleep(10);
 	lcm_dcs_write_seq_static(ctx, 0x29);
 	msleep(70);
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 }
 
 static int lcm_disable(struct drm_panel *panel)
@@ -571,7 +571,7 @@ static int lcm_disable(struct drm_panel *panel)
 
 	event.info  = NULL;
 	event.data = &blank_mode;
-	pr_info("%s for gesture\n", __func__);
+	pr_debug("%s for gesture\n", __func__);
 	fb_notifier_call_chain(FB_EARLY_EVENT_BLANK, &event);
 
 	if (ctx->backlight) {
@@ -603,7 +603,7 @@ static int lcm_unprepare(struct drm_panel *panel)
 #else
 #ifdef VENDOR_EDIT
 /* shifan@PSW.BSP.TP.Function, 2020/02/20, Add for TP common code */
-    pr_info("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
+    pr_debug("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
     if ((0 == tp_gesture_enable_flag())||(esd_flag == 1)) {
 #endif /*VENDOR_EDIT*/
 	/*ctx->reset_gpio =
@@ -663,7 +663,7 @@ static int lcm_panel_poweron(struct drm_panel *panel)
 	struct lcm *ctx = panel_to_lcm(panel);
 	int ret;
 
-	pr_info("%s+\n", __func__);
+	pr_debug("%s+\n", __func__);
      if ((0 == tp_gesture_enable_flag())||(esd_flag == 1)) {
 	/*usleep_range(20 * 1000, 20 * 1000);
 	ctx->lcd_1p8_gpio = devm_gpiod_get(ctx->dev, "lcd-1p8", GPIOD_OUT_HIGH);
@@ -698,7 +698,7 @@ static int lcm_panel_poweron(struct drm_panel *panel)
 	usleep_range(5 * 1000, 5 * 1000);
         devm_gpiod_put(ctx->dev, ctx->reset_gpio);
      }
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 	return 0;
 }
 
@@ -712,14 +712,14 @@ static int lcm_prepare(struct drm_panel *panel)
 	struct lcm *ctx = panel_to_lcm(panel);
 	int ret;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	if (ctx->prepared)
 		return 0;
 
 #if defined(CONFIG_RT5081_PMU_DSV) || defined(CONFIG_MT6370_PMU_DSV)
 	lcm_panel_bias_enable();
 #else
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 /*	ctx->reset_gpio = devm_gpiod_get(ctx->dev, "reset", GPIOD_OUT_HIGH);
 	usleep_range(5 * 1000, 5 * 1000);
 	gpiod_set_value(ctx->reset_gpio, 0);
@@ -1170,15 +1170,15 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 		endpoint = of_graph_get_next_endpoint(dsi_node, NULL);
 		if (endpoint) {
 			remote_node = of_graph_get_remote_port_parent(endpoint);
-			pr_info("device_node name:%s\n", remote_node->name);
+			pr_debug("device_node name:%s\n", remote_node->name);
                    }
 	}
 	if (remote_node != dev->of_node) {
-		pr_info("%s+ skip probe due to not current lcm.\n", __func__);
+		pr_debug("%s+ skip probe due to not current lcm.\n", __func__);
 		return 0;
 	}	
 
-	pr_info("%s+\n", __func__);
+	pr_debug("%s+\n", __func__);
 	ctx = devm_kzalloc(dev, sizeof(struct lcm), GFP_KERNEL);
 	if (!ctx)
 		return -ENOMEM;
@@ -1258,9 +1258,9 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
     ctx->is_normal_mode = true;
     if( META_BOOT == get_boot_mode() || FACTORY_BOOT == get_boot_mode() )
         ctx->is_normal_mode = false;
-    pr_info("%s: is_normal_mode = %d \n", __func__, ctx->is_normal_mode);
+    pr_debug("%s: is_normal_mode = %d \n", __func__, ctx->is_normal_mode);
 #endif /*VENDOR_EDIT*/
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 	oplus_max_normal_brightness = 3067;
 	disp_aal_set_dre_en(1);
 	register_device_proc("lcd", "NT36672C_JDI_ZOLA", "nt_jdi_4096");

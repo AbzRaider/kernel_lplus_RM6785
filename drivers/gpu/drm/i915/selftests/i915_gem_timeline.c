@@ -172,7 +172,7 @@ static int bench_sync(void *arg)
 	} while (!time_after(jiffies, end_time));
 	kt = ktime_sub(ktime_get(), kt);
 	kt = ktime_sub_ns(kt, (count * prng32_1M * 2) >> 20);
-	pr_info("%s: %lu random insertions, %lluns/insert\n",
+	pr_debug("%s: %lu random insertions, %lluns/insert\n",
 		__func__, count, (long long)div64_ul(ktime_to_ns(kt), count));
 
 	/* Benchmark looking up the exact same context ids as we just set */
@@ -190,7 +190,7 @@ static int bench_sync(void *arg)
 	}
 	kt = ktime_sub(ktime_get(), kt);
 	kt = ktime_sub_ns(kt, (count * prng32_1M * 2) >> 20);
-	pr_info("%s: %lu random lookups, %lluns/lookup\n",
+	pr_debug("%s: %lu random lookups, %lluns/lookup\n",
 		__func__, count, (long long)div64_ul(ktime_to_ns(kt), count));
 
 	mock_timeline_destroy(tl);
@@ -208,7 +208,7 @@ static int bench_sync(void *arg)
 		__intel_timeline_sync_set(tl, count++, 0);
 	} while (!time_after(jiffies, end_time));
 	kt = ktime_sub(ktime_get(), kt);
-	pr_info("%s: %lu in-order insertions, %lluns/insert\n",
+	pr_debug("%s: %lu in-order insertions, %lluns/insert\n",
 		__func__, count, (long long)div64_ul(ktime_to_ns(kt), count));
 
 	/* Benchmark looking up the exact same context ids as we just set */
@@ -222,7 +222,7 @@ static int bench_sync(void *arg)
 		}
 	}
 	kt = ktime_sub(ktime_get(), kt);
-	pr_info("%s: %lu in-order lookups, %lluns/lookup\n",
+	pr_debug("%s: %lu in-order lookups, %lluns/lookup\n",
 		__func__, count, (long long)div64_ul(ktime_to_ns(kt), count));
 
 	mock_timeline_destroy(tl);
@@ -248,7 +248,7 @@ static int bench_sync(void *arg)
 	} while (!time_after(jiffies, end_time));
 	kt = ktime_sub(ktime_get(), kt);
 	kt = ktime_sub_ns(kt, (count * prng32_1M * 2) >> 20);
-	pr_info("%s: %lu repeated insert/lookups, %lluns/op\n",
+	pr_debug("%s: %lu repeated insert/lookups, %lluns/op\n",
 		__func__, count, (long long)div64_ul(ktime_to_ns(kt), count));
 	mock_timeline_destroy(tl);
 	cond_resched();
@@ -278,7 +278,7 @@ static int bench_sync(void *arg)
 			count++;
 		} while (!time_after(jiffies, end_time));
 		kt = ktime_sub(ktime_get(), kt);
-		pr_info("%s: %lu cyclic/%d insert/lookups, %lluns/op\n",
+		pr_debug("%s: %lu cyclic/%d insert/lookups, %lluns/op\n",
 			__func__, count, order,
 			(long long)div64_ul(ktime_to_ns(kt), count));
 		mock_timeline_destroy(tl);

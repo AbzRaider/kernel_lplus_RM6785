@@ -175,7 +175,7 @@ int smu7_send_msg_to_smc(struct pp_smumgr *smumgr, uint16_t msg)
 	ret = SMUM_READ_FIELD(smumgr->device, SMC_RESP_0, SMC_RESP);
 
 	if (ret != 1)
-		pr_info("\n failed to send pre message %x ret is %d \n",  msg, ret);
+		pr_debug("\n failed to send pre message %x ret is %d \n",  msg, ret);
 
 	cgs_write_register(smumgr->device, mmSMC_MESSAGE_0, msg);
 
@@ -184,7 +184,7 @@ int smu7_send_msg_to_smc(struct pp_smumgr *smumgr, uint16_t msg)
 	ret = SMUM_READ_FIELD(smumgr->device, SMC_RESP_0, SMC_RESP);
 
 	if (ret != 1)
-		pr_info("\n failed to send message %x ret is %d \n",  msg, ret);
+		pr_debug("\n failed to send message %x ret is %d \n",  msg, ret);
 
 	return 0;
 }
@@ -225,7 +225,7 @@ int smu7_send_msg_to_smc_offset(struct pp_smumgr *smumgr)
 	SMUM_WAIT_FIELD_UNEQUAL(smumgr, SMC_RESP_0, SMC_RESP, 0);
 
 	if (1 != SMUM_READ_FIELD(smumgr->device, SMC_RESP_0, SMC_RESP))
-		pr_info("Failed to send Message.\n");
+		pr_debug("Failed to send Message.\n");
 
 	return 0;
 }
@@ -347,7 +347,7 @@ static uint32_t smu7_get_mask_for_firmware_type(uint32_t fw_type)
 		result = UCODE_ID_RLC_G_MASK;
 		break;
 	default:
-		pr_info("UCode type is out of range! \n");
+		pr_debug("UCode type is out of range! \n");
 		result = 0;
 	}
 
@@ -397,7 +397,7 @@ int smu7_request_smu_load_fw(struct pp_smumgr *smumgr)
 	struct SMU_DRAMData_TOC *toc;
 
 	if (!smumgr->reload_fw) {
-		pr_info("skip reloading...\n");
+		pr_debug("skip reloading...\n");
 		return 0;
 	}
 

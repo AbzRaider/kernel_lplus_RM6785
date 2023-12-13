@@ -403,7 +403,7 @@ static int lg_prepare(struct drm_panel *panel)
 	struct lg_panel *ctx = panel_to_lg(panel);
 	int ret;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	if (ctx->prepared)
 		return 0;
 
@@ -585,7 +585,7 @@ static int lg_probe(struct mipi_dsi_device *dsi)
 	struct device_node *backlight;
 	int ret;
 
-	pr_info("%s+\n", __func__);
+	pr_debug("%s+\n", __func__);
 	ctx = devm_kzalloc(dev, sizeof(struct lg_panel), GFP_KERNEL);
 	if (!ctx)
 		return -ENOMEM;
@@ -637,7 +637,7 @@ static int lg_probe(struct mipi_dsi_device *dsi)
 		return ret;
 #endif
 
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }

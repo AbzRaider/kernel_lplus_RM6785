@@ -618,7 +618,7 @@ err_fb:
 	i915_gem_stolen_remove_node(dev_priv, &fbc->compressed_fb);
 err_llb:
 	if (drm_mm_initialized(&dev_priv->mm.stolen))
-		pr_info_once("drm: not enough stolen space for compressed buffer (need %d more bytes), disabling. Hint: you may be able to increase stolen memory size in the BIOS to avoid this.\n", size);
+		pr_debug_once("drm: not enough stolen space for compressed buffer (need %d more bytes), disabling. Hint: you may be able to increase stolen memory size in the BIOS to avoid this.\n", size);
 	return -ENOSPC;
 }
 

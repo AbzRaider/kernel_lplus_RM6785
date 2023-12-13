@@ -928,7 +928,7 @@ static int lcm_setbacklight_cmdq(void *dsi, dcs_write_gce cb,
 	pr_err("debug for display panel backlight value,func:=%s,level :=%d, mapped_level := %d\n", __func__, level, mapped_level);
 /* #endif */ /* OPLUS_BUG_STABILITY */
 	if (level == 1 || mapped_level == 1) {
-		pr_info("enter aod mode, ignore set backlight to 1\n");
+		pr_debug("enter aod mode, ignore set backlight to 1\n");
 	} else if(mapped_level <= 2047){
 	    if(flag_hbm == 1){
 			bl_tb1[1] = 0x20;
@@ -1056,7 +1056,7 @@ static int lcm_panel_poweroff(struct drm_panel *panel)
         gpiod_set_value(ctx->reset_gpio, 0);
         devm_gpiod_put(ctx->dev, ctx->reset_gpio);
         msleep(10);
-        pr_info("%s: going to cut off power \n", __func__);
+        pr_debug("%s: going to cut off power \n", __func__);
         ctx->bias_vci = devm_gpiod_get_index(ctx->dev,
                 "bias", 0, GPIOD_OUT_HIGH);
         gpiod_set_value(ctx->bias_vci, 0);
@@ -1339,11 +1339,11 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 		endpoint = of_graph_get_next_endpoint(dsi_node, NULL);
 		if (endpoint) {
 			remote_node = of_graph_get_remote_port_parent(endpoint);
-			pr_info("device_node name:%s\n", remote_node->name);
+			pr_debug("device_node name:%s\n", remote_node->name);
                    }
 	}
 	if (remote_node != dev->of_node) {
-		pr_info("%s+ skip probe due to not current lcm.\n", __func__);
+		pr_debug("%s+ skip probe due to not current lcm.\n", __func__);
 		return 0;
 	}
 
@@ -1407,7 +1407,7 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 	ctx->hbm_en = false;
 
 	register_device_proc("lcd", "AMS644VA04_MTK04", "samsung4096");
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }

@@ -305,7 +305,7 @@ static int lcm_prepare(struct drm_panel *panel)
 	struct lcm *ctx = panel_to_lcm(panel);
 	int ret;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	if (ctx->prepared)
 		return 0;
 
@@ -427,7 +427,7 @@ static int panel_ata_check(struct drm_panel *panel)
 	unsigned char id[3] = {0x00, 0x00, 0x00};
 	ssize_t ret;
 
-	pr_info("%s success\n", __func__);
+	pr_debug("%s success\n", __func__);
 #if 0
 	ret = mipi_dsi_dcs_read(dsi, 0x4, data, 3);
 	if (ret < 0)
@@ -800,7 +800,7 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 		return ret;
 #endif
 
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }

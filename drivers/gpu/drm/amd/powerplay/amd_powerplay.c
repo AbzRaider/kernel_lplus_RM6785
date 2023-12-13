@@ -96,7 +96,7 @@ static int pp_sw_init(void *handle)
 
 		ret = smumgr->smumgr_funcs->smu_init(smumgr);
 
-		pr_info("amdgpu: powerplay sw initialized\n");
+		pr_debug("amdgpu: powerplay sw initialized\n");
 	}
 	return ret;
 }
@@ -211,7 +211,7 @@ int amd_set_clockgating_by_smu(void *handle, uint32_t msg_id)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->update_clock_gatings == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 
@@ -233,7 +233,7 @@ static int pp_set_powergating_state(void *handle,
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->enable_per_cu_power_gating == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 
@@ -339,7 +339,7 @@ static int pp_dpm_force_performance_level(void *handle,
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->force_dpm_level == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 
@@ -383,7 +383,7 @@ static int pp_dpm_get_sclk(void *handle, bool low)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->get_sclk == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -406,7 +406,7 @@ static int pp_dpm_get_mclk(void *handle, bool low)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->get_mclk == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -429,7 +429,7 @@ static int pp_dpm_powergate_vce(void *handle, bool gate)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->powergate_vce == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -452,7 +452,7 @@ static int pp_dpm_powergate_uvd(void *handle, bool gate)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->powergate_uvd == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -576,7 +576,7 @@ static int pp_dpm_set_fan_control_mode(void *handle, uint32_t mode)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->set_fan_control_mode == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -599,7 +599,7 @@ static int pp_dpm_get_fan_control_mode(void *handle)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->get_fan_control_mode == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -622,7 +622,7 @@ static int pp_dpm_set_fan_speed_percent(void *handle, uint32_t percent)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->set_fan_speed_percent == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -645,7 +645,7 @@ static int pp_dpm_get_fan_speed_percent(void *handle, uint32_t *speed)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->get_fan_speed_percent == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 
@@ -691,7 +691,7 @@ static int pp_dpm_get_temperature(void *handle)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->get_temperature == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -826,7 +826,7 @@ static int pp_dpm_force_clock_level(void *handle,
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->force_clock_level == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -850,7 +850,7 @@ static int pp_dpm_print_clock_levels(void *handle,
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->print_clock_levels == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -873,7 +873,7 @@ static int pp_dpm_get_sclk_od(void *handle)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->get_sclk_od == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -896,7 +896,7 @@ static int pp_dpm_set_sclk_od(void *handle, uint32_t value)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->set_sclk_od == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 
@@ -920,7 +920,7 @@ static int pp_dpm_get_mclk_od(void *handle)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->get_mclk_od == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -943,7 +943,7 @@ static int pp_dpm_set_mclk_od(void *handle, uint32_t value)
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->set_mclk_od == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 	mutex_lock(&pp_handle->pp_lock);
@@ -967,7 +967,7 @@ static int pp_dpm_read_sensor(void *handle, int idx,
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->read_sensor == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 
@@ -1009,7 +1009,7 @@ static int pp_dpm_reset_power_profile_state(void *handle,
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->set_power_profile_state == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 
@@ -1062,7 +1062,7 @@ static int pp_dpm_set_power_profile_state(void *handle,
 	hwmgr = pp_handle->hwmgr;
 
 	if (hwmgr->hwmgr_func->set_power_profile_state == NULL) {
-		pr_info("%s was not implemented.\n", __func__);
+		pr_debug("%s was not implemented.\n", __func__);
 		return 0;
 	}
 
@@ -1310,7 +1310,7 @@ int amd_powerplay_get_current_clocks(void *handle,
 					&hw_clocks, PHM_PerformanceLevelDesignation_Activity);
 
 	if (ret != 0) {
-		pr_info("Error in phm_get_clock_info \n");
+		pr_debug("Error in phm_get_clock_info \n");
 		mutex_unlock(&pp_handle->pp_lock);
 		return -EINVAL;
 	}

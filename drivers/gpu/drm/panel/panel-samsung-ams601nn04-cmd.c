@@ -281,7 +281,7 @@ static int samsung_prepare(struct drm_panel *panel)
 	struct samsung *ctx = panel_to_samsung(panel);
 	int ret;
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	if (ctx->prepared)
 		return 0;
 
@@ -442,7 +442,7 @@ static int samsung_probe(struct mipi_dsi_device *dsi)
 	struct device_node *backlight;
 	int ret;
 
-	pr_info("%s+\n", __func__);
+	pr_debug("%s+\n", __func__);
 	ctx = devm_kzalloc(dev, sizeof(struct samsung), GFP_KERNEL);
 	if (!ctx)
 		return -ENOMEM;
@@ -493,7 +493,7 @@ static int samsung_probe(struct mipi_dsi_device *dsi)
 		return ret;
 #endif
 
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }

@@ -553,7 +553,7 @@ static void vega10_patch_with_vdd_leakage(struct pp_hwmgr *hwmgr,
 	}
 
 	if (*voltage > ATOM_VIRTUAL_VOLTAGE_ID0)
-		pr_info("Voltage value looks like a Leakage ID \
+		pr_debug("Voltage value looks like a Leakage ID \
 				but it's not patched\n");
 }
 
@@ -1527,7 +1527,7 @@ static int vega10_populate_smc_link_levels(struct pp_hwmgr *hwmgr)
 		result = vega10_populate_single_lclk_level(hwmgr,
 				pcie_table->lclk[i], &(pp_table->LclkDid[i]));
 		if (result) {
-			pr_info("Populate LClock Level %d Failed!\n", i);
+			pr_debug("Populate LClock Level %d Failed!\n", i);
 			return result;
 		}
 	}
@@ -1540,7 +1540,7 @@ static int vega10_populate_smc_link_levels(struct pp_hwmgr *hwmgr)
 		result = vega10_populate_single_lclk_level(hwmgr,
 				pcie_table->lclk[j], &(pp_table->LclkDid[i]));
 		if (result) {
-			pr_info("Populate LClock Level %d Failed!\n", i);
+			pr_debug("Populate LClock Level %d Failed!\n", i);
 			return result;
 		}
 		i++;
@@ -1667,7 +1667,7 @@ uint16_t vega10_locate_vddc_given_clock(struct pp_hwmgr *hwmgr,
 			return dep_table->entries[i].vddc;
 	}
 
-	pr_info("[LocateVddcGivenClock] Cannot locate SOC Vddc for this clock!");
+	pr_debug("[LocateVddcGivenClock] Cannot locate SOC Vddc for this clock!");
 	return 0;
 }
 
@@ -2329,7 +2329,7 @@ static int vega10_acg_enable(struct pp_hwmgr *hwmgr)
 				data->smu_features[GNLD_ACG].smu_feature_bitmap))
 					data->smu_features[GNLD_ACG].enabled = true;
 		} else {
-			pr_info("[ACG_Enable] ACG BTC Returned Failed Status!\n");
+			pr_debug("[ACG_Enable] ACG BTC Returned Failed Status!\n");
 			data->smu_features[GNLD_ACG].enabled = false;
 		}
 	}
@@ -2638,7 +2638,7 @@ static int vega10_enable_thermal_protection(struct pp_hwmgr *hwmgr)
 
 	if (data->smu_features[GNLD_THERMAL].supported) {
 		if (data->smu_features[GNLD_THERMAL].enabled)
-			pr_info("THERMAL Feature Already enabled!");
+			pr_debug("THERMAL Feature Already enabled!");
 
 		PP_ASSERT_WITH_CODE(
 				!vega10_enable_smc_features(hwmgr->smumgr,
@@ -2658,7 +2658,7 @@ static int vega10_disable_thermal_protection(struct pp_hwmgr *hwmgr)
 
 	if (data->smu_features[GNLD_THERMAL].supported) {
 		if (!data->smu_features[GNLD_THERMAL].enabled)
-			pr_info("THERMAL Feature Already disabled!");
+			pr_debug("THERMAL Feature Already disabled!");
 
 		PP_ASSERT_WITH_CODE(
 				!vega10_enable_smc_features(hwmgr->smumgr,
@@ -3143,7 +3143,7 @@ static int vega10_apply_state_adjust_rules(struct pp_hwmgr *hwmgr,
 			request_ps->classification.ui_label);
 
 	if (vega10_ps->performance_level_count != 2)
-		pr_info("VI should always have 2 performance levels");
+		pr_debug("VI should always have 2 performance levels");
 
 	max_limits = (PP_PowerSource_AC == hwmgr->power_source) ?
 			&(hwmgr->dyn_state.max_clock_voltage_on_ac) :
@@ -3699,7 +3699,7 @@ static uint32_t vega10_find_highest_dpm_level(
 				return i - 1;
 		}
 	} else {
-		pr_info("DPM Table Has Too Many Entries!");
+		pr_debug("DPM Table Has Too Many Entries!");
 		return MAX_REGULAR_DPM_NUMBER - 1;
 	}
 
@@ -4086,7 +4086,7 @@ int vega10_display_clock_voltage_request(struct pp_hwmgr *hwmgr,
 		clk_select = DSPCLK_PHYCLK;
 		break;
 	default:
-		pr_info("[DisplayClockVoltageRequest]Invalid Clock Type!");
+		pr_debug("[DisplayClockVoltageRequest]Invalid Clock Type!");
 		result = -1;
 		break;
 	}
@@ -4167,7 +4167,7 @@ static int vega10_notify_smc_display_config_after_ps_adjustment(
 					min_clocks.dcefClockInSR /100),
 					"Attempt to set divider for DCEFCLK Failed!",);
 		} else {
-			pr_info("Attempt to set Hard Min for DCEFCLK Failed!");
+			pr_debug("Attempt to set Hard Min for DCEFCLK Failed!");
 		}
 	} else {
 		pr_debug("Cannot find requested DCEFCLK!");

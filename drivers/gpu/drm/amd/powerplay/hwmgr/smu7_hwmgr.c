@@ -1515,7 +1515,7 @@ static int smu7_get_evv_voltages(struct pp_hwmgr *hwmgr)
 						data->vddcgfx_leakage.count++;
 					}
 				} else {
-					pr_info("Error retrieving EVV voltage value!\n");
+					pr_debug("Error retrieving EVV voltage value!\n");
 				}
 			}
 		} else {
@@ -2314,7 +2314,7 @@ static int smu7_hwmgr_backend_init(struct pp_hwmgr *hwmgr)
 	result = smu7_get_evv_voltages(hwmgr);
 
 	if (result) {
-		pr_info("Get EVV Voltage Failed.  Abort Driver loading!\n");
+		pr_debug("Get EVV Voltage Failed.  Abort Driver loading!\n");
 		return -EINVAL;
 	}
 
@@ -3813,9 +3813,9 @@ static int smu7_notify_link_speed_change_after_state_change(
 
 		if (acpi_pcie_perf_request(hwmgr->device, request, false)) {
 			if (PP_PCIEGen2 == target_link_speed)
-				pr_info("PSPP request to switch to Gen2 from Gen3 Failed!");
+				pr_debug("PSPP request to switch to Gen2 from Gen3 Failed!");
 			else
-				pr_info("PSPP request to switch to Gen1 from Gen2 Failed!");
+				pr_debug("PSPP request to switch to Gen1 from Gen2 Failed!");
 		}
 	}
 

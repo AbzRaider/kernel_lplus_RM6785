@@ -673,7 +673,7 @@ static int cz_request_smu_load_fw(struct pp_smumgr *smumgr)
 	uint32_t smc_address;
 
 	if (!smumgr->reload_fw) {
-		pr_info("skip reloading...\n");
+		pr_debug("skip reloading...\n");
 		return 0;
 	}
 

@@ -181,7 +181,7 @@ static int fiji_setup_pwr_virus(struct pp_smumgr *smumgr)
 			break;
 
 		default:
-			pr_info("Table Exit with Invalid Command!");
+			pr_debug("Table Exit with Invalid Command!");
 			smu_data->avfs.avfs_btc_status = AVFS_BTC_VIRUS_FAIL;
 			result = -EINVAL;
 			break;
@@ -200,7 +200,7 @@ static int fiji_start_avfs_btc(struct pp_smumgr *smumgr)
 	if (0 != smu_data->avfs.avfs_btc_param) {
 		if (0 != smu7_send_msg_to_smc_with_parameter(smumgr,
 				PPSMC_MSG_PerformBtc, smu_data->avfs.avfs_btc_param)) {
-			pr_info("[AVFS][Fiji_PerformBtc] PerformBTC SMU msg failed");
+			pr_debug("[AVFS][Fiji_PerformBtc] PerformBTC SMU msg failed");
 			result = -EINVAL;
 		}
 	}

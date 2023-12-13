@@ -251,7 +251,7 @@ static void __init tilcdc_convert_slave_node(void)
 	if (ret)
 		pr_err("%s: Creating overlay failed: %d\n", __func__, ret);
 	else
-		pr_info("%s: ti,tilcdc,slave node successfully converted\n",
+		pr_debug("%s: ti,tilcdc,slave node successfully converted\n",
 			__func__);
 out:
 	kfree_table_free(&kft);

@@ -1447,7 +1447,7 @@ static int lcm_setbacklight_cmdq(void *dsi, dcs_write_gce cb,
 	pr_err("debug for display panel backlight value,func:=%s,level :=%d, mapped_level := %d\n", __func__, level, mapped_level);
 //#endif
 	if(level == 1 || mapped_level == 1){
-		pr_info("enter aod mode, ignore set backlight to 1\n");
+		pr_debug("enter aod mode, ignore set backlight to 1\n");
 		if (aod_state == 1) {
 			cb(dsi, handle, post_backlight_on0, ARRAY_SIZE(post_backlight_on0));
 			cb(dsi, handle, post_backlight_on1, ARRAY_SIZE(post_backlight_on1));
@@ -1922,16 +1922,16 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 	struct device_node *dsi_node, *remote_node = NULL, *endpoint = NULL;
 
 	dsi_node = of_get_parent(dev->of_node);
-	pr_info("[soso]samsung probe\n");
+	pr_debug("[soso]samsung probe\n");
 	if (dsi_node) {
 		endpoint = of_graph_get_next_endpoint(dsi_node, NULL);
 		if (endpoint) {
 			remote_node = of_graph_get_remote_port_parent(endpoint);
-			pr_info("device_node name:%s\n", remote_node->name);
+			pr_debug("device_node name:%s\n", remote_node->name);
         }
 	}
 	if (remote_node != dev->of_node) {
-		pr_info("%s+ skip probe due to not current lcm,dev->of_node is %s\n", __func__,dev->of_node);
+		pr_debug("%s+ skip probe due to not current lcm,dev->of_node is %s\n", __func__,dev->of_node);
 		return 0;
 	}
 	ctx = devm_kzalloc(dev, sizeof(struct lcm), GFP_KERNEL);
@@ -2006,10 +2006,10 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 	register_device_proc("lcd", "ANA6705_SAMSUNG", "Samsung2048");
 	ctx->hbm_en = false;
 	oplus_max_normal_brightness = 2047;
-	pr_info("%s zjb+\n", __func__);
+	pr_debug("%s zjb+\n", __func__);
 
 	//register_device_proc("lcd", "AMS644VA04_MTK04", "samsung1024");
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }

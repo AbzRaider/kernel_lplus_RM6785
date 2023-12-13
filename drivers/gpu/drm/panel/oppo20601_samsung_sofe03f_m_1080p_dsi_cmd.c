@@ -1409,7 +1409,7 @@ static int lcm_setbacklight_cmdq(void *dsi, dcs_write_gce cb,
 
 	/*add for global hbm*/
 	if(mapped_level_exp == 1 || mapped_level == 1){
-		pr_info("enter aod mode, ignore set backlight to 1\n");
+		pr_debug("enter aod mode, ignore set backlight to 1\n");
 	} else if(mapped_level_exp <= 1023){
 	    if(flag_writ == 3||flag_writ == 0){
 			bl_tb1[1] = 0x20;
@@ -1811,16 +1811,16 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 	struct device_node *dsi_node, *remote_node = NULL, *endpoint = NULL;
 
 	dsi_node = of_get_parent(dev->of_node);
-	pr_info("[soso]samsung probe\n");
+	pr_debug("[soso]samsung probe\n");
 	if (dsi_node) {
 		endpoint = of_graph_get_next_endpoint(dsi_node, NULL);
 		if (endpoint) {
 			remote_node = of_graph_get_remote_port_parent(endpoint);
-			pr_info("device_node name:%s\n", remote_node->name);
+			pr_debug("device_node name:%s\n", remote_node->name);
         }
 	}
 	if (remote_node != dev->of_node) {
-		pr_info("%s+ skip probe due to not current lcm,dev->of_node is %s\n", __func__,dev->of_node);
+		pr_debug("%s+ skip probe due to not current lcm,dev->of_node is %s\n", __func__,dev->of_node);
 		return 0;
 	}
 	ctx = devm_kzalloc(dev, sizeof(struct lcm), GFP_KERNEL);
@@ -1887,11 +1887,11 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 #endif
 
 	ctx->hbm_en = false;
-	pr_info("%s samsung lcm+\n", __func__);
+	pr_debug("%s samsung lcm+\n", __func__);
 	init_global_exp_backlight();
 	disp_aal_set_dre_en(1);
 	register_device_proc("lcd", "AMS644VA04_MTK04", "samsung1024");
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }

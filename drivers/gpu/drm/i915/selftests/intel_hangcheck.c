@@ -753,7 +753,7 @@ static int igt_reset_queue(void *arg)
 			prev = rq;
 			count++;
 		} while (time_before(jiffies, end_time));
-		pr_info("%s: Completed %d resets\n", engine->name, count);
+		pr_debug("%s: Completed %d resets\n", engine->name, count);
 
 		*h.batch = MI_BATCH_BUFFER_END;
 		wmb();

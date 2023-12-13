@@ -503,7 +503,7 @@ static int lcm_prepare(struct drm_panel *panel)
 	int ret;
 	
 	DDPINFO("%s\n", __func__);
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	if (ctx->prepared)
 		return 0;
 
@@ -909,7 +909,7 @@ static int lcm_probe(struct mipi_dsi_device *dsi)
 
 	ctx->hbm_en = false;
 
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }

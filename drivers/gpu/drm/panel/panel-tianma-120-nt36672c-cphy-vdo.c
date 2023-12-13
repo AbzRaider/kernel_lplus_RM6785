@@ -143,7 +143,7 @@ static int _lcm_i2c_write_bytes(unsigned char addr, unsigned char value)
 	write_data[1] = value;
 	ret = i2c_master_send(client, write_data, 2);
 	if (ret < 0)
-		pr_info("[LCM][ERROR] _lcm_i2c write data fail !!\n");
+		pr_debug("[LCM][ERROR] _lcm_i2c write data fail !!\n");
 
 	return ret;
 }
@@ -227,11 +227,11 @@ static void tianma_panel_get_data(struct tianma *ctx)
 {
 	u8 buffer[3] = {0};
 	static int ret;
-	pr_info("%s+\n", __func__);
+	pr_debug("%s+\n", __func__);
 
 	if (ret == 0) {
 		ret = tianma_dcs_read(ctx, 0x0A, buffer, 1);
-		pr_info("%s  0x%08x\n", __func__,buffer[0] | (buffer[1] << 8));
+		pr_debug("%s  0x%08x\n", __func__,buffer[0] | (buffer[1] << 8));
 		dev_info(ctx->dev, "return %d data(0x%08x) to dsi engine\n",
 			 ret, buffer[0] | (buffer[1] << 8));
 	}
@@ -453,7 +453,7 @@ static void tianma_panel_init(struct tianma *ctx)
 	//Display On
 	tianma_dcs_write_seq_static(ctx, 0x29);
 	msleep(10);
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 }
 
 static int tianma_disable(struct drm_panel *panel)
@@ -462,7 +462,7 @@ static int tianma_disable(struct drm_panel *panel)
 
 	if (!ctx->enabled)
 		return 0;
-	pr_info("%s,120\n", __func__);
+	pr_debug("%s,120\n", __func__);
 	if (ctx->backlight) {
 		ctx->backlight->props.power = FB_BLANK_POWERDOWN;
 		backlight_update_status(ctx->backlight);
@@ -476,7 +476,7 @@ static int tianma_disable(struct drm_panel *panel)
 static int tianma_unprepare(struct drm_panel *panel)
 {
 	struct tianma *ctx = panel_to_tianma(panel);
-	pr_info("%s,120\n", __func__);
+	pr_debug("%s,120\n", __func__);
 
 	if (!ctx->prepared)
 		return 0;
@@ -487,14 +487,14 @@ static int tianma_unprepare(struct drm_panel *panel)
 
 /* #ifdef OPLUS_BUG_STABILITY */
 /* shifan@PSW.BSP.TP.Function, 2019/04/26, Add for TP common code */
-    pr_info("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
+    pr_debug("%s: tp_gesture_enable_flag = %d \n", __func__, tp_gesture_enable_flag());
     if ((0 == tp_gesture_enable_flag())||(esd_flag == 1)) {
 /* #endif */ /* OPLUS_BUG_STABILITY */
 	ctx->reset_gpio = devm_gpiod_get(ctx->dev, "reset", GPIOD_OUT_HIGH);
 	gpiod_set_value(ctx->reset_gpio, 0);
 	devm_gpiod_put(ctx->dev, ctx->reset_gpio);
 
-        pr_info("%s: going to cut off power \n", __func__);
+        pr_debug("%s: going to cut off power \n", __func__);
 	ctx->bias_neg = devm_gpiod_get_index(ctx->dev,
             "bias", 1, GPIOD_OUT_HIGH);
 	gpiod_set_value(ctx->bias_neg, 0);
@@ -531,7 +531,7 @@ static int lcm_panel_poweron(struct drm_panel *panel)
 	struct tianma *ctx = panel_to_tianma(panel);
 	int ret;
 
-	pr_info("%s+,120\n", __func__);
+	pr_debug("%s+,120\n", __func__);
 
 	//add for ldo
 	ctx->bias_en = devm_gpiod_get(ctx->dev, "ldo", GPIOD_OUT_HIGH);
@@ -551,7 +551,7 @@ static int lcm_panel_poweron(struct drm_panel *panel)
 	devm_gpiod_put(ctx->dev, ctx->bias_neg);
 	_lcm_i2c_write_bytes(0x0, 0xf);
 	_lcm_i2c_write_bytes(0x1, 0xf);
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 	return 0;
 }
 
@@ -565,7 +565,7 @@ static int tianma_prepare(struct drm_panel *panel)
 	struct tianma *ctx = panel_to_tianma(panel);
 	int ret;
 
-	pr_info("%s,120+\n", __func__);
+	pr_debug("%s,120+\n", __func__);
 	if (ctx->prepared)
 		return 0;
 
@@ -615,7 +615,7 @@ static int tianma_prepare(struct drm_panel *panel)
         }
 /* #endif */ /* OPLUS_BUG_STABILITY */
 
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 	return ret;
 }
 
@@ -1099,14 +1099,14 @@ static int tianma_probe(struct mipi_dsi_device *dsi)
 		endpoint = of_graph_get_next_endpoint(dsi_node, NULL);
 		if (endpoint) {
 			remote_node = of_graph_get_remote_port_parent(endpoint);
-			pr_info("device_node name:%s\n", remote_node->name);
+			pr_debug("device_node name:%s\n", remote_node->name);
                    }
 	}
 	if (remote_node != dev->of_node) {
-		pr_info("%s+ skip probe due to not current lcm.\n", __func__);
+		pr_debug("%s+ skip probe due to not current lcm.\n", __func__);
 		return 0;
 	}
-	pr_info("%s,120+\n", __func__);
+	pr_debug("%s,120+\n", __func__);
 	ctx = devm_kzalloc(dev, sizeof(struct tianma), GFP_KERNEL);
 	if (!ctx)
 		return -ENOMEM;
@@ -1179,10 +1179,10 @@ static int tianma_probe(struct mipi_dsi_device *dsi)
         ctx->is_normal_mode = true;
         if( META_BOOT == get_boot_mode() || FACTORY_BOOT == get_boot_mode() )
             ctx->is_normal_mode = false;
-        pr_info("%s: is_normal_mode = %d \n", __func__, ctx->is_normal_mode);
+        pr_debug("%s: is_normal_mode = %d \n", __func__, ctx->is_normal_mode);
 /* #endif */ /* OPLUS_BUG_STABILITY */
 
-	pr_info("%s-\n", __func__);
+	pr_debug("%s-\n", __func__);
 
 	return ret;
 }
@@ -1191,7 +1191,7 @@ static int tianma_remove(struct mipi_dsi_device *dsi)
 {
 	struct tianma *ctx = mipi_dsi_get_drvdata(dsi);
 	//NVT H -> L
-	pr_info(" %s will reset pin to L\n", __func__);
+	pr_debug(" %s will reset pin to L\n", __func__);
 	ctx->reset_gpio = devm_gpiod_get(ctx->dev, "reset", GPIOD_OUT_HIGH);
 	gpiod_set_value(ctx->reset_gpio, 0);
 	devm_gpiod_put(ctx->dev, ctx->reset_gpio);
