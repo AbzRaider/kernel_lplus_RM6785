@@ -505,7 +505,7 @@ void fgauge_get_profile_id(void)
 		devinfo_info_set("battery","unknown","UNKNOWN");
 	}
 	
-	pr_info("fgauge_get_profile_id:[%d,%d]\n",bat_id_num,gm.battery_id);
+	pr_debug("fgauge_get_profile_id:[%d,%d]\n",bat_id_num,gm.battery_id);
 #else
 	bm_err("[%s]battery_id_voltage is %d\n", __func__, id_volt);
 
@@ -2343,7 +2343,7 @@ void fg_bat_plugout_int_handler_gm25(void)
 	bool is_bat_exist;
 
 	is_bat_exist = pmic_is_battery_exist();
-	pr_info("%s: bat_exist: %d\n", __func__, is_bat_exist);
+	pr_debug("%s: bat_exist: %d\n", __func__, is_bat_exist);
 
 	if (fg_interrupt_check() == false)
 		return;

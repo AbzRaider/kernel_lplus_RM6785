@@ -1343,7 +1343,7 @@ static int oplus_power_supply_init(struct oplus_chg_chip *chip)
         ret = PTR_ERR(mt_chg->batt_psy);
         goto err_battery_psy;
     }
-    pr_info("%s\n", __func__);
+    pr_debug("%s\n", __func__);
     return 0;
 
 err_usb_psy:

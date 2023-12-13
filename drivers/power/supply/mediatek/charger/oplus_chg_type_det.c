@@ -149,7 +149,7 @@ static void dump_charger_name(enum charger_type type)
 #endif /*OPLUS_FEATURE_CHG_BASIC && CONFIG_OPLUS_CHARGER_MT6370_TYPEC*/
 		break;
 	default:
-		pr_info("%s: charger type: %d, Not Defined!!!\n", __func__,
+		pr_debug("%s: charger type: %d, Not Defined!!!\n", __func__,
 			type);
 		break;
 	}
@@ -250,7 +250,7 @@ static int mt_charger_set_property(struct power_supply *psy,
 	}
 #endif /* OPLUS_FEATURE_CHG_BASIC && CONFIG_OPLUS_CHARGER_MT6370_TYPEC */
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 
 	if (!mtk_chg) {
 		pr_notice("%s: no mtk chg data\n", __func__);
@@ -274,7 +274,7 @@ static int mt_charger_set_property(struct power_supply *psy,
                if (mtk_chg->chg_type == CHARGER_UNKNOWN){
                } else {
                    //Bin.Xu@BSP.Kernel.Stability, 2019/11/11, Add for oppo dump
-				   pr_info("%s,failed\n", __func__);
+				   pr_debug("%s,failed\n", __func__);
                }
 #endif /*OPLUS_FEATURE_CHG_BASIC*/
 #if defined(OPLUS_FEATURE_CHG_BASIC) && defined(CONFIG_OPLUS_CHARGER_MT6370_TYPEC)
@@ -292,7 +292,7 @@ static int mt_charger_set_property(struct power_supply *psy,
 
 	/*Liu.Yong@BSP.CHG.Basic, 2021/07/22, Add for error detection */
 	if (!mtk_chg->cti) {
-		pr_info("%s,mtk_chg->cti in NULL\n", __func__);
+		pr_debug("%s,mtk_chg->cti in NULL\n", __func__);
 		return -EINVAL;
 	}
 
@@ -388,7 +388,7 @@ static enum power_supply_property mt_usb_properties[] = {
 #endif
 static void tcpc_power_off_work_handler(struct work_struct *work)
 {
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	kernel_power_off();
 }
 
@@ -424,7 +424,7 @@ static int pd_tcp_notifier_call(struct notifier_block *pnb,
 		    (noti->typec_state.new_state == TYPEC_ATTACHED_SNK ||
 		    noti->typec_state.new_state == TYPEC_ATTACHED_CUSTOM_SRC ||
 		    noti->typec_state.new_state == TYPEC_ATTACHED_NORP_SRC)) {
-			pr_info("%s USB Plug in, pol = %d\n", __func__,
+			pr_debug("%s USB Plug in, pol = %d\n", __func__,
 					noti->typec_state.polarity);
 			plug_in_out_handler(cti, true, false);
 		} else if ((noti->typec_state.old_state == TYPEC_ATTACHED_SNK ||
@@ -433,22 +433,22 @@ static int pd_tcp_notifier_call(struct notifier_block *pnb,
 			&& noti->typec_state.new_state == TYPEC_UNATTACHED) {
 			if (cti->tcpc_kpoc) {
 				vbus = battery_get_vbus();
-				pr_info("%s KPOC Plug out, vbus = %d\n",
+				pr_debug("%s KPOC Plug out, vbus = %d\n",
 					__func__, vbus);
 				queue_work_on(cpumask_first(cpu_online_mask),
 					      cti->pwr_off_wq,
 					      &cti->pwr_off_work);
 				break;
 			}
-			pr_info("%s USB Plug out\n", __func__);
+			pr_debug("%s USB Plug out\n", __func__);
 			plug_in_out_handler(cti, false, false);
 		} else if (noti->typec_state.old_state == TYPEC_ATTACHED_SRC &&
 			noti->typec_state.new_state == TYPEC_ATTACHED_SNK) {
-			pr_info("%s Source_to_Sink\n", __func__);
+			pr_debug("%s Source_to_Sink\n", __func__);
 			plug_in_out_handler(cti, true, true);
 		}  else if (noti->typec_state.old_state == TYPEC_ATTACHED_SNK &&
 			noti->typec_state.new_state == TYPEC_ATTACHED_SRC) {
-			pr_info("%s Sink_to_Source\n", __func__);
+			pr_debug("%s Sink_to_Source\n", __func__);
 			plug_in_out_handler(cti, false, true);
 		}
 		break;
@@ -463,12 +463,12 @@ static int chgdet_task_threadfn(void *data)
 	bool attach = false;
 	int ret = 0;
 
-	pr_info("%s: ++\n", __func__);
+	pr_debug("%s: ++\n", __func__);
 	while (!kthread_should_stop()) {
 		ret = wait_event_interruptible(cti->waitq,
 					     atomic_read(&cti->chgdet_cnt) > 0);
 		if (ret < 0) {
-			pr_info("%s: wait event been interrupted(%d)\n",
+			pr_debug("%s: wait event been interrupted(%d)\n",
 				__func__, ret);
 			continue;
 		}
@@ -488,7 +488,7 @@ static int chgdet_task_threadfn(void *data)
 #endif
 		pm_relax(cti->dev);
 	}
-	pr_info("%s: --\n", __func__);
+	pr_debug("%s: --\n", __func__);
 	return 0;
 }
 
@@ -544,14 +544,14 @@ static int mt_charger_probe(struct platform_device *pdev)
 /*Liu.Yong@BSP.CHG.Basic, 2020/12/25, Add for micro-usb issue.*/
 	ret = of_property_read_u32(mt_chg->dev->of_node, "mtk,usb-type",&usb_type);
 	if (ret) {
-		pr_info("%s: get usb type filed\n", __func__);
+		pr_debug("%s: get usb type filed\n", __func__);
 		usb_type = OPLUS_TYPE_C_USB_TYPE;
 	}
-	pr_info("%s:usb type:%d\n", __func__, usb_type);
+	pr_debug("%s:usb type:%d\n", __func__, usb_type);
 	if (usb_type == OPLUS_TYPE_C_USB_TYPE){
 		cti->tcpc_dev = tcpc_dev_get_by_name("type_c_port0");
 		if (cti->tcpc_dev == NULL) {
-			pr_info("%s: tcpc device not ready, defer\n", __func__);
+			pr_debug("%s: tcpc device not ready, defer\n", __func__);
 			ret = -EPROBE_DEFER;
 			goto err_get_tcpc_dev;
 		}
@@ -559,7 +559,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 		ret = register_tcp_dev_notifier(cti->tcpc_dev,
 			&cti->pd_nb, TCP_NOTIFY_TYPE_ALL);
 		if (ret < 0) {
-			pr_info("%s: register tcpc notifer fail\n", __func__);
+			pr_debug("%s: register tcpc notifer fail\n", __func__);
 			ret = -EINVAL;
 			goto err_get_tcpc_dev;
 		}
@@ -570,7 +570,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 	cti->chg_consumer = charger_manager_get_by_name(cti->dev,
 							"charger_port1");
 	if (!cti->chg_consumer) {
-		pr_info("%s: get charger consumer device failed\n", __func__);
+		pr_debug("%s: get charger consumer device failed\n", __func__);
 		ret = -EINVAL;
 		goto err_get_tcpc_dev;
 	}
@@ -579,7 +579,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 	if (ret == KERNEL_POWER_OFF_CHARGING_BOOT ||
 	    ret == LOW_POWER_OFF_CHARGING_BOOT)
 		cti->tcpc_kpoc = true;
-	pr_info("%s KPOC(%d)\n", __func__, cti->tcpc_kpoc);
+	pr_debug("%s KPOC(%d)\n", __func__, cti->tcpc_kpoc);
 
 	/* Init Charger Detection */
 	mutex_init(&cti->chgdet_lock);
@@ -590,7 +590,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 				chgdet_task_threadfn, cti, "chgdet_thread");
 	ret = PTR_ERR_OR_ZERO(cti->chgdet_task);
 	if (ret < 0) {
-		pr_info("%s: create chg det work fail\n", __func__);
+		pr_debug("%s: create chg det work fail\n", __func__);
 		return ret;
 	}
 
@@ -605,7 +605,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, mt_chg);
 	device_init_wakeup(&pdev->dev, true);
 
-	pr_info("%s done\n", __func__);
+	pr_debug("%s done\n", __func__);
 	return 0;
 
 err_get_tcpc_dev:
@@ -623,7 +623,7 @@ static int mt_charger_remove(struct platform_device *pdev)
 
 	power_supply_unregister(mt_charger->chg_psy);
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	if (cti->chgdet_task) {
 		kthread_stop(cti->chgdet_task);
 		atomic_inc(&cti->chgdet_cnt);
@@ -723,7 +723,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 #ifdef CONFIG_TCPC_CLASS
 	cti->tcpc_dev = tcpc_dev_get_by_name("type_c_port0");
 	if (cti->tcpc_dev == NULL) {
-		pr_info("%s: tcpc device not ready, defer\n", __func__);
+		pr_debug("%s: tcpc device not ready, defer\n", __func__);
 		ret = -EPROBE_DEFER;
 		goto err_get_tcpc_dev;
 	}
@@ -731,7 +731,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 	ret = register_tcp_dev_notifier(cti->tcpc_dev,
 		&cti->pd_nb, TCP_NOTIFY_TYPE_ALL);
 	if (ret < 0) {
-		pr_info("%s: register tcpc notifer fail\n", __func__);
+		pr_debug("%s: register tcpc notifer fail\n", __func__);
 		ret = -EINVAL;
 		goto err_get_tcpc_dev;
 	}
@@ -740,7 +740,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 	cti->chg_consumer = charger_manager_get_by_name(cti->dev,
 							"charger_port1");
 	if (!cti->chg_consumer) {
-		pr_info("%s: get charger consumer device failed\n", __func__);
+		pr_debug("%s: get charger consumer device failed\n", __func__);
 		ret = -EINVAL;
 		goto err_get_tcpc_dev;
 	}
@@ -749,7 +749,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 	if (ret == KERNEL_POWER_OFF_CHARGING_BOOT ||
 	    ret == LOW_POWER_OFF_CHARGING_BOOT)
 		cti->tcpc_kpoc = true;
-	pr_info("%s KPOC(%d)\n", __func__, cti->tcpc_kpoc);
+	pr_debug("%s KPOC(%d)\n", __func__, cti->tcpc_kpoc);
 
 	/* Init Charger Detection */
 	mutex_init(&cti->chgdet_lock);
@@ -760,7 +760,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 				chgdet_task_threadfn, cti, "chgdet_thread");
 	ret = PTR_ERR_OR_ZERO(cti->chgdet_task);
 	if (ret < 0) {
-		pr_info("%s: create chg det work fail\n", __func__);
+		pr_debug("%s: create chg det work fail\n", __func__);
 		return ret;
 	}
 
@@ -775,7 +775,7 @@ static int mt_charger_probe(struct platform_device *pdev)
 	platform_set_drvdata(pdev, mt_chg);
 	device_init_wakeup(&pdev->dev, true);
 
-	pr_info("%s done\n", __func__);
+	pr_debug("%s done\n", __func__);
 	return 0;
 
 err_get_tcpc_dev:
@@ -802,7 +802,7 @@ static int mt_charger_remove(struct platform_device *pdev)
 	power_supply_unregister(mt_charger->ac_psy);
 	power_supply_unregister(mt_charger->usb_psy);
 
-	pr_info("%s\n", __func__);
+	pr_debug("%s\n", __func__);
 	if (cti->chgdet_task) {
 		kthread_stop(cti->chgdet_task);
 		atomic_inc(&cti->chgdet_cnt);
@@ -865,7 +865,7 @@ bool upmu_is_chr_det(void)
 	struct power_supply *psy = power_supply_get_by_name("charger");
 
 	if (!psy) {
-		pr_info("%s: get power supply failed\n", __func__);
+		pr_debug("%s: get power supply failed\n", __func__);
 		return -EINVAL;
 	}
 	mtk_chg = power_supply_get_drvdata(psy);
@@ -947,7 +947,7 @@ enum charger_type mt_get_charger_type(void)
 	struct power_supply *psy = power_supply_get_by_name("charger");
 
 	if (!psy) {
-		pr_info("%s: get power supply failed\n", __func__);
+		pr_debug("%s: get power supply failed\n", __func__);
 		return -EINVAL;
 	}
 	mtk_chg = power_supply_get_drvdata(psy);
@@ -964,12 +964,12 @@ bool mt_charger_plugin(void)
 	struct chg_type_info *cti = NULL;
 
 	if (!psy) {
-		pr_info("%s: get power supply failed\n", __func__);
+		pr_debug("%s: get power supply failed\n", __func__);
 		return -EINVAL;
 	}
 	mtk_chg = power_supply_get_drvdata(psy);
 	cti = mtk_chg->cti;
-	pr_info("%s plugin:%d\n", __func__, cti->plugin);
+	pr_debug("%s plugin:%d\n", __func__, cti->plugin);
 
 	return cti->plugin;
 }
@@ -1016,7 +1016,7 @@ static int __init mt_charger_det_notifier_call_init(void)
 			  __func__, ret);
 		goto out;
 	}
-	pr_info("%s done\n", __func__);
+	pr_debug("%s done\n", __func__);
 out:
 	power_supply_put(psy);
 	return ret;
