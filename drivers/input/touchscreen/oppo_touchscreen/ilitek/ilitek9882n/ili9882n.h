@@ -151,7 +151,7 @@
 
 #define ILI_INFO(fmt, arg...)                                           \
     ({                                                                      \
-        pr_info("[TP]ILITEK: [INFO](%s, %d): " fmt, __func__, __LINE__, ##arg); \
+        pr_debug("[TP]ILITEK: [INFO](%s, %d): " fmt, __func__, __LINE__, ##arg); \
     })                                                                      \
 
 #define ILI_ERR(fmt, arg...)                                            \
@@ -163,7 +163,7 @@ extern bool ili_debug_en;
 #define ILI_DBG(fmt, arg...)                                            \
     do {                                                                    \
         if (LEVEL_DEBUG == tp_debug || ili_debug_en)                                            \
-            pr_info("[TP]ILITEK: [DEBUG](%s, %d): " fmt, __func__, __LINE__, ##arg);        \
+            pr_debug("[TP]ILITEK: [DEBUG](%s, %d): " fmt, __func__, __LINE__, ##arg);        \
     } while (0)
 
 #define ERR_ALLOC_MEM(X)         ((IS_ERR(X) || X == NULL) ? 1 : 0)

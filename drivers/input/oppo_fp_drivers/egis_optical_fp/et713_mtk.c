@@ -157,7 +157,7 @@ static int egis_fb_state_chg_callback(struct notifier_block *nb,
     char msg = 0;
     int retval = 0;
 
-    pr_info("[info] %s go to the egis_fb_state_chg_callback value = %d\n",
+    pr_debug("[info] %s go to the egis_fb_state_chg_callback value = %d\n",
             __func__, (int)val);
     e_data = container_of(nb, struct egistec_data, notifier);
 
@@ -687,16 +687,16 @@ int egistec_parse_dt(struct device *dev, struct egistec_data *data)
     node = of_find_compatible_node(NULL, NULL, "goodix,goodix_fp");
     if (node) {
         data->vcc_33v_Pin = of_get_named_gpio(node, "goodix,pw_en", 0);
-        pr_info("vcc_33v_Pin GPIO is %d.  -----\n", data->vcc_33v_Pin);
+        pr_debug("vcc_33v_Pin GPIO is %d.  -----\n", data->vcc_33v_Pin);
         if (!gpio_is_valid(data->vcc_33v_Pin)) {
-        pr_info("vcc_33v_Pin GPIO is invalid.\n");
+        pr_debug("vcc_33v_Pin GPIO is invalid.\n");
         return -ENODEV;
         }
 
         data->rstPin = of_get_named_gpio(node, "goodix,gpio_reset", 0);
-        pr_info("rstPin GPIO is %d.  -----\n", data->rstPin);
+        pr_debug("rstPin GPIO is %d.  -----\n", data->rstPin);
         if (!gpio_is_valid(data->rstPin)) {
-        pr_info("rstPin GPIO is invalid.\n");
+        pr_debug("rstPin GPIO is invalid.\n");
         return -ENODEV;
         }
 

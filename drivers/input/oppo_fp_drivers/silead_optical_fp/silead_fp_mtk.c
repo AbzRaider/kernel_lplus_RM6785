@@ -270,7 +270,7 @@ static int silfp_parse_dts(struct silfp_data* fp_dev)
     fp_dev->pin.spi_default = pinctrl_lookup_state(fp_dev->pin.pinctrl, "spi-default");
     if (IS_ERR(fp_dev->pin.spi_default)) {
         ret = PTR_ERR(fp_dev->pin.spi_default);
-        pr_info("%s can't find silfp spi-default\n", __func__);
+        pr_debug("%s can't find silfp spi-default\n", __func__);
         return ret;
     }
     pinctrl_select_state(fp_dev->pin.pinctrl, fp_dev->pin.spi_default);
@@ -304,17 +304,17 @@ static int silfp_parse_dts(struct silfp_data* fp_dev)
         ret = of_property_read_u32(fp_dev->spi->dev.of_node,"spi-id", &fp_dev->pin.spi_id);
         if (ret) {
             fp_dev->pin.spi_id = 0;
-            pr_info("Error getting spi_id\n");
+            pr_debug("Error getting spi_id\n");
         }
         ret = of_property_read_u32(fp_dev->spi->dev.of_node,"spi-irq", &fp_dev->pin.spi_irq);
         if (ret) {
             fp_dev->pin.spi_irq = 0;
-            pr_info("Error getting spi_irq\n");
+            pr_debug("Error getting spi_irq\n");
         }
         ret = of_property_read_u32(fp_dev->spi->dev.of_node,"spi-reg", &fp_dev->pin.spi_reg);
         if (ret) {
             fp_dev->pin.spi_reg = 0;
-            pr_info("Error getting spi_reg\n");
+            pr_debug("Error getting spi_reg\n");
         }
     }
 

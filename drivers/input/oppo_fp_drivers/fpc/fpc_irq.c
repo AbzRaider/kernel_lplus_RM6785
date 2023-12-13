@@ -256,19 +256,19 @@ int fpc_power_on(struct fpc1020_data* fpc_dev)
         switch (fpc_dev->pwr_list[index].pwr_type) {
         case FP_POWER_MODE_LDO:
             rc = vreg_setup(fpc_dev, &(fpc_dev->pwr_list[index]), true);
-            pr_info("---- power on ldo ----\n");
+            pr_debug("---- power on ldo ----\n");
             break;
         case FP_POWER_MODE_GPIO:
             gpio_set_value(fpc_dev->pwr_list[index].pwr_gpio, fpc_dev->pwr_list[index].poweron_level);
-            pr_info("set pwr_gpio %d\n", fpc_dev->pwr_list[index].poweron_level);
+            pr_debug("set pwr_gpio %d\n", fpc_dev->pwr_list[index].poweron_level);
             break;
         case FP_POWER_MODE_AUTO:
-            pr_info("[%s] power on auto, no need power on again\n", __func__);
+            pr_debug("[%s] power on auto, no need power on again\n", __func__);
             break;
         case FP_POWER_MODE_NOT_SET:
         default:
             rc = -1;
-            pr_info("---- power on mode not set !!! ----\n");
+            pr_debug("---- power on mode not set !!! ----\n");
             break;
         }
         if (rc) {
@@ -276,7 +276,7 @@ int fpc_power_on(struct fpc1020_data* fpc_dev)
                     fpc_dev->pwr_list[index].pwr_type, index, rc);
             break;
         } else {
-            pr_info("---- power on ok with mode = %d, index = %d  ----\n",
+            pr_debug("---- power on ok with mode = %d, index = %d  ----\n",
                     fpc_dev->pwr_list[index].pwr_type, index);
         }
         msleep(fpc_dev->pwr_list[index].delay);
@@ -296,19 +296,19 @@ int fpc_power_off(struct fpc1020_data* fpc_dev)
         switch (fpc_dev->pwr_list[index].pwr_type) {
         case FP_POWER_MODE_LDO:
             rc = vreg_setup(fpc_dev, &(fpc_dev->pwr_list[index]), false);
-            pr_info("---- power on ldo ----\n");
+            pr_debug("---- power on ldo ----\n");
             break;
         case FP_POWER_MODE_GPIO:
             gpio_set_value(fpc_dev->pwr_list[index].pwr_gpio, (fpc_dev->pwr_list[index].poweron_level == 0 ? 1: 0));
-            pr_info("set pwr_gpio %d\n", (fpc_dev->pwr_list[index].poweron_level == 0 ? 1: 0));
+            pr_debug("set pwr_gpio %d\n", (fpc_dev->pwr_list[index].poweron_level == 0 ? 1: 0));
             break;
         case FP_POWER_MODE_AUTO:
-            pr_info("[%s] power on auto, no need power on again\n", __func__);
+            pr_debug("[%s] power on auto, no need power on again\n", __func__);
             break;
         case FP_POWER_MODE_NOT_SET:
         default:
             rc = -1;
-            pr_info("---- power on mode not set !!! ----\n");
+            pr_debug("---- power on mode not set !!! ----\n");
             break;
         }
         if (rc) {
@@ -316,7 +316,7 @@ int fpc_power_off(struct fpc1020_data* fpc_dev)
                     fpc_dev->pwr_list[index].pwr_type, index, rc);
             break;
         } else {
-            pr_info("---- power off ok with mode = %d, index = %d  ----\n",
+            pr_debug("---- power off ok with mode = %d, index = %d  ----\n",
                     fpc_dev->pwr_list[index].pwr_type, index);
         }
     }
@@ -621,7 +621,7 @@ int fpc_parse_pwr_list(struct fpc1020_data* fpc_dev) {
             goto exit;
         }
 
-        pr_info("read power type of index %d, type : %u\n", child_node_index, pwr_list[child_node_index].pwr_type);
+        pr_debug("read power type of index %d, type : %u\n", child_node_index, pwr_list[child_node_index].pwr_type);
 
         switch(pwr_list[child_node_index].pwr_type) {
         case FP_POWER_MODE_LDO:
@@ -669,7 +669,7 @@ int fpc_parse_pwr_list(struct fpc1020_data* fpc_dev) {
                 goto exit;
             }
 
-            pr_info("%s size = %d, ua=%d, vmax=%d, vmin=%d\n", node_name, ldo_param_amount,
+            pr_debug("%s size = %d, ua=%d, vmax=%d, vmin=%d\n", node_name, ldo_param_amount,
                     pwr_list[child_node_index].vreg_config.ua_load,
                     pwr_list[child_node_index].vreg_config.vmax,
                     pwr_list[child_node_index].vreg_config.vmax);
@@ -682,7 +682,7 @@ int fpc_parse_pwr_list(struct fpc1020_data* fpc_dev) {
                 ret = -FP_ERROR_GENERAL;
                 goto exit;
             }
-            pr_info("get config node name %s", node_name);
+            pr_debug("get config node name %s", node_name);
 
             /* get gpio by name */
             pwr_list[child_node_index].pwr_gpio = of_get_named_gpio(np, node_name, 0);
@@ -694,7 +694,7 @@ int fpc_parse_pwr_list(struct fpc1020_data* fpc_dev) {
             }
 
             /* get poweron-level of gpio */
-            pr_info("get poweron level: %s", FP_POWERON_LEVEL_NODE);
+            pr_debug("get poweron level: %s", FP_POWERON_LEVEL_NODE);
             ret = of_property_read_u32(child, FP_POWERON_LEVEL_NODE, &pwr_list[child_node_index].poweron_level);
             if (ret) {
                 /* property of poweron-level is not config, by default set to 1 */
@@ -704,7 +704,7 @@ int fpc_parse_pwr_list(struct fpc1020_data* fpc_dev) {
                     pwr_list[child_node_index].poweron_level = 1;
                 }
             }
-            pr_info("gpio poweron level: %d\n", pwr_list[child_node_index].poweron_level);
+            pr_debug("gpio poweron level: %d\n", pwr_list[child_node_index].poweron_level);
 
             ret = devm_gpio_request(dev, pwr_list[child_node_index].pwr_gpio, node_name);
             if (ret) {
@@ -716,7 +716,7 @@ int fpc_parse_pwr_list(struct fpc1020_data* fpc_dev) {
             break;
 
         case FP_POWER_MODE_AUTO:
-            pr_info("%s power mode auto \n", __func__);
+            pr_debug("%s power mode auto \n", __func__);
             break;
         default:
             pr_err("unknown type %u\n", pwr_list[child_node_index].pwr_type);

@@ -44,7 +44,7 @@ static int vreg_setup(struct gf_dev *goodix_fp, fp_power_info_t *pwr_info,
     }
     vreg = pwr_info->vreg;
     name = pwr_info->vreg_config.name;
-    pr_info("Regulator %s vreg_setup,enable=%d \n", name, enable);
+    pr_debug("Regulator %s vreg_setup,enable=%d \n", name, enable);
 
     if (enable) {
         if (!vreg) {
@@ -90,12 +90,12 @@ static int vreg_setup(struct gf_dev *goodix_fp, fp_power_info_t *pwr_info,
 
 void gf_cleanup_pwr_list(struct gf_dev* gf_dev) {
     unsigned index = 0;
-    pr_info("%s cleanup power list", __func__);
+    pr_debug("%s cleanup power list", __func__);
     for (index = 0; index < gf_dev->power_num; index++) {
         if (gf_dev->pwr_list[index].pwr_type == FP_POWER_MODE_GPIO) {
             if (gpio_is_valid(gf_dev->irq_gpio)) {
                 gpio_free(gf_dev->pwr_list[index].pwr_gpio);
-                pr_info("remove pwr_gpio success\n");
+                pr_debug("remove pwr_gpio success\n");
             }
         }
         if (gf_dev->pwr_list[index].pwr_type == FP_POWER_MODE_LDO)
@@ -174,7 +174,7 @@ int gf_parse_pwr_list(struct gf_dev* gf_dev)
                 goto exit;
             }
 
-            pr_info("%s size = %d, ua=%d, vmax=%d, vmin=%d\n", node_name, ldo_param_amount,
+            pr_debug("%s size = %d, ua=%d, vmax=%d, vmin=%d\n", node_name, ldo_param_amount,
                     pwr_list[child_node_index].vreg_config.ua_load,
                     pwr_list[child_node_index].vreg_config.vmax,
                     pwr_list[child_node_index].vreg_config.vmax);
@@ -187,7 +187,7 @@ int gf_parse_pwr_list(struct gf_dev* gf_dev)
                 ret = -FP_ERROR_GENERAL;
                 goto exit;
             }
-            pr_info("get config node name %s", node_name);
+            pr_debug("get config node name %s", node_name);
 
             /* get gpio by name */
             gf_dev->pwr_list[child_node_index].pwr_gpio = of_get_named_gpio(np, node_name, 0);
@@ -199,7 +199,7 @@ int gf_parse_pwr_list(struct gf_dev* gf_dev)
             }
 
             /* get poweron-level of gpio */
-            pr_info("get poweron level: %s", FP_POWERON_LEVEL_NODE);
+            pr_debug("get poweron level: %s", FP_POWERON_LEVEL_NODE);
             ret = of_property_read_u32(child, FP_POWERON_LEVEL_NODE, &pwr_list[child_node_index].poweron_level);
             if (ret) {
                 /* property of poweron-level is not config, by default set to 1 */
@@ -209,7 +209,7 @@ int gf_parse_pwr_list(struct gf_dev* gf_dev)
                     pwr_list[child_node_index].poweron_level = 1;
                 }
             }
-            pr_info("gpio poweron level: %d\n", pwr_list[child_node_index].poweron_level);
+            pr_debug("gpio poweron level: %d\n", pwr_list[child_node_index].poweron_level);
 
             ret = devm_gpio_request(dev, pwr_list[child_node_index].pwr_gpio, node_name);
             if (ret) {
@@ -323,7 +323,7 @@ int gf_parse_dts(struct gf_dev* gf_dev)
 	/*get reset resource*/
 	gf_dev->reset_gpio = of_get_named_gpio(pdev->dev.of_node, "goodix,gpio_reset", 0);
 	if (!gpio_is_valid(gf_dev->reset_gpio)) {
-		pr_info("RESET GPIO is invalid.\n");
+		pr_debug("RESET GPIO is invalid.\n");
 		return -1;
 	}
 
@@ -341,7 +341,7 @@ int gf_parse_dts(struct gf_dev* gf_dev)
     if (g_cs_gpio_disable != 1) {
         gf_dev->cs_gpio = of_get_named_gpio(pdev->dev.of_node, "goodix,gpio_cs", 0);
         if (!gpio_is_valid(gf_dev->cs_gpio)) {
-            pr_info("CS GPIO is invalid.\n");
+            pr_debug("CS GPIO is invalid.\n");
             return -1;
         }
         rc = gpio_request(gf_dev->cs_gpio, "goodix_cs");
@@ -356,7 +356,7 @@ int gf_parse_dts(struct gf_dev* gf_dev)
     /*get irq resourece*/
     gf_dev->irq_gpio = of_get_named_gpio(pdev->dev.of_node, "goodix,gpio_irq", 0);
 	if (!gpio_is_valid(gf_dev->irq_gpio)) {
-		pr_info("IRQ GPIO is invalid.\n");
+		pr_debug("IRQ GPIO is invalid.\n");
 		return -1;
 	}
 
@@ -379,20 +379,20 @@ int gf_parse_dts(struct gf_dev* gf_dev)
 
 void gf_cleanup(struct gf_dev* gf_dev)
 {
-	pr_info("[info] %s\n",__func__);
+	pr_debug("[info] %s\n",__func__);
 	if (gpio_is_valid(gf_dev->irq_gpio))
 	{
 		gpio_free(gf_dev->irq_gpio);
-		pr_info("remove irq_gpio success\n");
+		pr_debug("remove irq_gpio success\n");
 	}
     if (gpio_is_valid(gf_dev->cs_gpio)) {
         gpio_free(gf_dev->cs_gpio);
-        pr_info("remove cs_gpio success\n");
+        pr_debug("remove cs_gpio success\n");
     }
 	if (gpio_is_valid(gf_dev->reset_gpio))
 	{
 		gpio_free(gf_dev->reset_gpio);
-		pr_info("remove reset_gpio success\n");
+		pr_debug("remove reset_gpio success\n");
 	}
 
     gf_cleanup_pwr_list(gf_dev);
@@ -407,15 +407,15 @@ int gf_power_on(struct gf_dev* gf_dev)
         switch (gf_dev->pwr_list[index].pwr_type) {
         case FP_POWER_MODE_LDO:
             rc = vreg_setup(gf_dev, &(gf_dev->pwr_list[index]), true);
-            pr_info("---- power on ldo ----\n");
+            pr_debug("---- power on ldo ----\n");
             break;
         case FP_POWER_MODE_GPIO:
             gpio_set_value(gf_dev->pwr_list[index].pwr_gpio, gf_dev->pwr_list[index].poweron_level);
-            pr_info("set pwr_gpio %d\n", gf_dev->pwr_list[index].poweron_level);
+            pr_debug("set pwr_gpio %d\n", gf_dev->pwr_list[index].poweron_level);
             break;
         default:
             rc = -1;
-            pr_info("---- power on mode not set !!! ----\n");
+            pr_debug("---- power on mode not set !!! ----\n");
             break;
         }
 
@@ -424,7 +424,7 @@ int gf_power_on(struct gf_dev* gf_dev)
                 gf_dev->pwr_list[index].pwr_type, index, rc);
             break;
         } else {
-            pr_info("---- power on ok with mode = %d, index = %d  ----\n",
+            pr_debug("---- power on ok with mode = %d, index = %d  ----\n",
                     gf_dev->pwr_list[index].pwr_type, index);
         }
         msleep(gf_dev->pwr_list[index].delay);
@@ -443,15 +443,15 @@ int gf_power_off(struct gf_dev* gf_dev)
         switch (gf_dev->pwr_list[index].pwr_type) {
         case FP_POWER_MODE_LDO:
             rc = vreg_setup(gf_dev, &(gf_dev->pwr_list[index]), false);
-            pr_info("---- power on ldo ----\n");
+            pr_debug("---- power on ldo ----\n");
             break;
         case FP_POWER_MODE_GPIO:
             gpio_set_value(gf_dev->pwr_list[index].pwr_gpio, (gf_dev->pwr_list[index].poweron_level == 0 ? 1 : 0));
-            pr_info("set pwr_gpio %d\n", (gf_dev->pwr_list[index].poweron_level == 0 ? 1 : 0));
+            pr_debug("set pwr_gpio %d\n", (gf_dev->pwr_list[index].poweron_level == 0 ? 1 : 0));
             break;
         default:
             rc = -1;
-            pr_info("---- power on mode not set !!! ----\n");
+            pr_debug("---- power on mode not set !!! ----\n");
             break;
         }
 
@@ -460,7 +460,7 @@ int gf_power_off(struct gf_dev* gf_dev)
                     gf_dev->pwr_list[index].pwr_type, index, rc);
             break;
         } else {
-            pr_info("---- power off ok with mode = %d, index = %d  ----\n",
+            pr_debug("---- power off ok with mode = %d, index = %d  ----\n",
                     gf_dev->pwr_list[index].pwr_type, index);
         }
     }
@@ -471,7 +471,7 @@ int gf_power_off(struct gf_dev* gf_dev)
 int gf_hw_reset(struct gf_dev *gf_dev, unsigned int delay_ms)
 {
 	if(gf_dev == NULL) {
-		pr_info("Input buff is NULL.\n");
+		pr_debug("Input buff is NULL.\n");
 		return -1;
 	}
 
@@ -479,7 +479,7 @@ int gf_hw_reset(struct gf_dev *gf_dev, unsigned int delay_ms)
 	mdelay(delay_ms);
 	gpio_set_value(gf_dev->reset_gpio, 1);
         if (gf_dev->cs_gpio_set) {
-                pr_info("---- pull CS up and set CS from gpio to func ----");
+                pr_debug("---- pull CS up and set CS from gpio to func ----");
                 gpio_set_value(gf_dev->cs_gpio, 1);
                 pinctrl_select_state(gf_dev->pinctrl, gf_dev->pstate_cs_func);
                 gf_dev->cs_gpio_set = false;
@@ -491,7 +491,7 @@ int gf_hw_reset(struct gf_dev *gf_dev, unsigned int delay_ms)
 int gf_irq_num(struct gf_dev *gf_dev)
 {
 	if(gf_dev == NULL) {
-		pr_info("Input buff is NULL.\n");
+		pr_debug("Input buff is NULL.\n");
 		return -1;
 	} else {
 		return gpio_to_irq(gf_dev->irq_gpio);

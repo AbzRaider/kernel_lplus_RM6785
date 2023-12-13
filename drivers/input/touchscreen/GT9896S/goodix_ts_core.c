@@ -348,7 +348,7 @@ static void gt9896s_debugfs_exit(void)
 {
 	debugfs_remove(gt9896s_dbg.dentry);
 	gt9896s_dbg.dentry = NULL;
-	pr_info("Debugfs module exit\n");
+	pr_debug("Debugfs module exit\n");
 }
 
 /* show external module infomation */

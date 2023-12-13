@@ -1283,10 +1283,10 @@ out:
 
     if (type == TYPE_JUGE) {
         if (mp_result == MP_DATA_PASS) {
-            pr_info("\n Result : PASS\n");
+            pr_debug("\n Result : PASS\n");
             tmp_len += snprintf(csv + tmp_len, (file_zise - tmp_len), "Result : PASS\n");
         } else {
-            pr_info("\n Result : FAIL\n");
+            pr_debug("\n Result : FAIL\n");
             tmp_len += snprintf(csv + tmp_len, (file_zise - tmp_len), "Result : FAIL\n");
         }
     }
@@ -3284,36 +3284,36 @@ static int mp_show_result(bool lcm_on)
         get_frame_cont = 1;
 
         if (tItems[i].item_result == MP_DATA_PASS) {
-            pr_info("\n[%s],OK \n\n", tItems[i].desp);
+            pr_debug("\n[%s],OK \n\n", tItems[i].desp);
             csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "\n[%s],OK\n\n", tItems[i].desp);
         } else {
-            pr_info("\n[%s],NG \n\n", tItems[i].desp);
+            pr_debug("\n[%s],NG \n\n", tItems[i].desp);
             csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "\n[%s],NG\n\n", tItems[i].desp);
         }
 
         if (tItems[i].catalog == PIN_TEST) {
-            pr_info("Test INT Pin = %d\n", tItems[i].test_int_pin);
+            pr_debug("Test INT Pin = %d\n", tItems[i].test_int_pin);
             csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "Test INT Pin = %d\n",
                                 tItems[i].test_int_pin);
-            pr_info("Pulse Test = %d\n", tItems[i].int_pulse_test);
+            pr_debug("Pulse Test = %d\n", tItems[i].int_pulse_test);
             csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "Pulse Test = %d\n",
                                 tItems[i].int_pulse_test);
-            pr_info("Delay Time = %d\n", tItems[i].delay_time);
+            pr_debug("Delay Time = %d\n", tItems[i].delay_time);
             csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "Delay Time = %d\n",
                                 tItems[i].delay_time);
             continue;
         }
 
         mp_print_csv_cdc_cmd(csv, &csv_len, i, CSV_FILE_SIZE);
-        pr_info("Frame count = %d\n", tItems[i].frame_count);
+        pr_debug("Frame count = %d\n", tItems[i].frame_count);
         csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "Frame count = %d\n",
                             tItems[i].frame_count);
 
         if (tItems[i].trimmed_mean && tItems[i].catalog != PEAK_TO_PEAK_TEST) {
-            pr_info("lowest percentage = %d\n", tItems[i].lowest_percentage);
+            pr_debug("lowest percentage = %d\n", tItems[i].lowest_percentage);
             csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "lowest percentage = %d\n",
                                 tItems[i].lowest_percentage);
-            pr_info("highest percentage = %d\n", tItems[i].highest_percentage);
+            pr_debug("highest percentage = %d\n", tItems[i].highest_percentage);
             csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "highest percentage = %d\n",
                                 tItems[i].highest_percentage);
         }
@@ -3352,9 +3352,9 @@ static int mp_show_result(bool lcm_on)
                 min_threshold[j] = tItems[i].min;
             }
 
-            pr_info("Max = %d\n", tItems[i].max);
+            pr_debug("Max = %d\n", tItems[i].max);
             csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "Max = %d\n", tItems[i].max);
-            pr_info("Min = %d\n", tItems[i].min);
+            pr_debug("Min = %d\n", tItems[i].min);
             csv_len += snprintf(csv + csv_len, (CSV_FILE_SIZE - csv_len), "Min = %d\n", tItems[i].min);
         }
 

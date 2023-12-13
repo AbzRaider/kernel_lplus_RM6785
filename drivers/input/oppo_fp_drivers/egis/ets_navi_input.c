@@ -395,7 +395,7 @@ void translated_command_converter(char cmd, struct egistec_data *egistec)
 #if 0
 		if (g_KeyEventRaised == false) {
 			g_KeyEventRaised = true;
-			pr_info("Egis : g_SingleClick %u tap interval =%u double tap interval = %u time= %u",
+			pr_debug("Egis : g_SingleClick %u tap interval =%u double tap interval = %u time= %u",
 				g_SingleClick, jiffies_to_msecs(jiffies - g_SingleClickJiffies),
 				jiffies_to_msecs(jiffies - g_DoubleClickJiffies), jiffies_to_msecs(jiffies));
 #if ENABLE_TRANSLATED_SINGLE_CLICK

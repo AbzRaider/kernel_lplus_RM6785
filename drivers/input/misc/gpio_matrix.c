@@ -44,13 +44,13 @@ static void clear_phantom_key(struct gpio_kp *kp, int out, int in)
 
 	if (!test_bit(keycode, kp->input_devs->dev[dev]->key)) {
 		if (mi->flags & GPIOKPF_PRINT_PHANTOM_KEYS)
-			pr_info("gpiomatrix: phantom key %x, %d-%d (%d-%d) "
+			pr_debug("gpiomatrix: phantom key %x, %d-%d (%d-%d) "
 				"cleared\n", keycode, out, in,
 				mi->output_gpios[out], mi->input_gpios[in]);
 		__clear_bit(key_index, kp->keys_pressed);
 	} else {
 		if (mi->flags & GPIOKPF_PRINT_PHANTOM_KEYS)
-			pr_info("gpiomatrix: phantom key %x, %d-%d (%d-%d) "
+			pr_debug("gpiomatrix: phantom key %x, %d-%d (%d-%d) "
 				"not cleared\n", keycode, out, in,
 				mi->output_gpios[out], mi->input_gpios[in]);
 	}
@@ -114,13 +114,13 @@ static void report_key(struct gpio_kp *kp, int key_index, int out, int in)
 	if (pressed != test_bit(keycode, kp->input_devs->dev[dev]->key)) {
 		if (keycode == KEY_RESERVED) {
 			if (mi->flags & GPIOKPF_PRINT_UNMAPPED_KEYS)
-				pr_info("gpiomatrix: unmapped key, %d-%d "
+				pr_debug("gpiomatrix: unmapped key, %d-%d "
 					"(%d-%d) changed to %d\n",
 					out, in, mi->output_gpios[out],
 					mi->input_gpios[in], pressed);
 		} else {
 			if (mi->flags & GPIOKPF_PRINT_MAPPED_KEYS)
-				pr_info("gpiomatrix: key %x, %d-%d (%d-%d) "
+				pr_debug("gpiomatrix: key %x, %d-%d (%d-%d) "
 					"changed to %d\n", keycode,
 					out, in, mi->output_gpios[out],
 					mi->input_gpios[in], pressed);
@@ -399,7 +399,7 @@ int gpio_event_matrix_func(struct gpio_event_input_devs *input_devs,
 		err = gpio_keypad_request_irqs(kp);
 		kp->use_irq = err == 0;
 
-		pr_info("GPIO Matrix Keypad Driver: Start keypad matrix for "
+		pr_debug("GPIO Matrix Keypad Driver: Start keypad matrix for "
 			"%s%s in %s mode\n", input_devs->dev[0]->name,
 			(input_devs->count > 1) ? "..." : "",
 			kp->use_irq ? "interrupt" : "polling");

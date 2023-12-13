@@ -674,7 +674,7 @@ static int init_custom_gpio_state(struct platform_device *client) {
 			node = of_find_compatible_node(NULL, NULL, "mediatek, VOLUME_UP-eint");
 			if (node) {
 				of_property_read_u32_array(node , "interrupts", intr, ARRAY_SIZE(intr));
-				pr_info("volume up intr[0-3]  = %d %d %d %d\r\n", intr[0] ,intr[1], intr[2] ,intr[3]);
+				pr_debug("volume up intr[0-3]  = %d %d %d %d\r\n", intr[0] ,intr[1], intr[2] ,intr[3]);
 				//vol_key_info.vol_up_gpio = intr[0];
 				vol_key_info.vol_up_irq = irq_of_parse_and_map(node, 0);
 				ret = of_property_read_u32(node, "debounce", &debounce_time);
@@ -716,7 +716,7 @@ static int init_custom_gpio_state(struct platform_device *client) {
 		node = of_find_compatible_node(NULL, NULL, "mediatek, VOLUME_DOWN-eint");
 		if (node) {
 			of_property_read_u32_array(node , "interrupts", intr, ARRAY_SIZE(intr));
-			pr_info("volume down intr[0-3] = %d %d %d %d\r\n", intr[0] ,intr[1], intr[2], intr[3]);
+			pr_debug("volume down intr[0-3] = %d %d %d %d\r\n", intr[0] ,intr[1], intr[2], intr[3]);
 			//vol_key_info.vol_down_gpio = intr[0];
 			vol_key_info.vol_down_irq = irq_of_parse_and_map(node, 0);
 		} else {

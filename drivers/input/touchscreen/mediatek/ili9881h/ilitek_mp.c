@@ -1180,10 +1180,10 @@ static void mp_compare_cdc_show_result(int index, s32 *tmp, char *csv,
 out:
 	if (type == TYPE_JUGE) {
 		if (mp_result == MP_PASS) {
-			pr_info("\n Result : PASS\n");
+			pr_debug("\n Result : PASS\n");
 			tmp_len += sprintf(csv + tmp_len, "Result : PASS\n");
 		} else {
-			pr_info("\n Result : FAIL\n");
+			pr_debug("\n Result : FAIL\n");
 			tmp_len += sprintf(csv + tmp_len, "Result : FAIL\n");
 		}
 	}
@@ -2624,23 +2624,23 @@ static void mp_show_result(const char *csv_path)
 			continue;
 
 		if (tItems[i].item_result == MP_PASS) {
-			pr_info("\n\n[%s],OK \n", tItems[i].desp);
+			pr_debug("\n\n[%s],OK \n", tItems[i].desp);
 			csv_len += sprintf(csv + csv_len, "\n\n[%s],OK\n", tItems[i].desp);
 		} else {
-			pr_info("\n\n[%s],NG \n", tItems[i].desp);
+			pr_debug("\n\n[%s],NG \n", tItems[i].desp);
 			csv_len += sprintf(csv + csv_len, "\n\n[%s],NG\n", tItems[i].desp);
 		}
 
 		mp_print_csv_cdc_cmd(csv, &csv_len, i);
 
-		pr_info("Frame count = %d\n", tItems[i].frame_count);
+		pr_debug("Frame count = %d\n", tItems[i].frame_count);
 		csv_len += sprintf(csv + csv_len, "Frame count = %d\n", tItems[i].frame_count);
 
 		if (tItems[i].trimmed_mean && tItems[i].catalog != PEAK_TO_PEAK_TEST) {
-			pr_info("lowest percentage = %d\n", tItems[i].lowest_percentage);
+			pr_debug("lowest percentage = %d\n", tItems[i].lowest_percentage);
 			csv_len += sprintf(csv + csv_len, "lowest percentage = %d\n", tItems[i].lowest_percentage);
 
-			pr_info("highest percentage = %d\n", tItems[i].highest_percentage);
+			pr_debug("highest percentage = %d\n", tItems[i].highest_percentage);
 			csv_len += sprintf(csv + csv_len, "highest percentage = %d\n", tItems[i].highest_percentage);
 		}
 
@@ -2658,10 +2658,10 @@ static void mp_show_result(const char *csv_path)
 				min_threshold[j] = tItems[i].min;
 			}
 
-			pr_info("Max = %d\n", tItems[i].max);
+			pr_debug("Max = %d\n", tItems[i].max);
 			csv_len += sprintf(csv + csv_len, "Max = %d\n", tItems[i].max);
 
-			pr_info("Min = %d\n", tItems[i].min);
+			pr_debug("Min = %d\n", tItems[i].min);
 			csv_len += sprintf(csv + csv_len, "Min = %d\n", tItems[i].min);
 		}
 

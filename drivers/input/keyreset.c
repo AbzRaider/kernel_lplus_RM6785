@@ -43,7 +43,7 @@ static void do_reset_fn(void *priv)
 	if (state->reset_fn) {
 		state->restart_requested = state->reset_fn();
 	} else {
-		pr_info("keyboard reset\n");
+		pr_debug("keyboard reset\n");
 		schedule_work(&state->restart_work);
 		state->restart_requested = 1;
 	}

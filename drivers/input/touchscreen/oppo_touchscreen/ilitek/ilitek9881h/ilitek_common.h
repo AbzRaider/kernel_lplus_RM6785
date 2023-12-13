@@ -131,7 +131,7 @@ enum {
 };
 
 #define ipio_info(fmt, arg...)	\
-	pr_info("ILITEK: (%s, %d): " fmt, __func__, __LINE__, ##arg);
+	pr_debug("ILITEK: (%s, %d): " fmt, __func__, __LINE__, ##arg);
 
 #define ipio_err(fmt, arg...)	\
 	pr_err("ILITEK: (%s, %d): " fmt, __func__, __LINE__, ##arg);
@@ -139,7 +139,7 @@ enum {
 #define ipio_debug(level, fmt, arg...)									\
 	do {																\
 		if (level & ipio_debug_level)									\
-		pr_info("ILITEK: (%s, %d): " fmt, __func__, __LINE__, ##arg);	\
+		pr_debug("ILITEK: (%s, %d): " fmt, __func__, __LINE__, ##arg);	\
 	} while (0)
 
 #define TPD_DEVICE "ilitek,ili9881h"

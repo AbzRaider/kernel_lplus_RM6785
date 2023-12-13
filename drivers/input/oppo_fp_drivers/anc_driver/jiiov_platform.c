@@ -210,7 +210,7 @@ static int anc_opticalfp_tp_handler(struct fp_underscreen_info *tp_info)
     int rc = 0;
     char netlink_msg = (char)ANC_NETLINK_EVENT_INVALID;
 
-    pr_info("[anc] %s\n", __func__);
+    pr_debug("[anc] %s\n", __func__);
 
     g_anc_data->fp_tpinfo = *tp_info;
     if(tp_info->touch_state == lasttouchmode){
@@ -223,12 +223,12 @@ static int anc_opticalfp_tp_handler(struct fp_underscreen_info *tp_info)
 #endif
     if (1 == tp_info->touch_state) {
         netlink_msg = (char)ANC_NETLINK_EVENT_TOUCH_DOWN;
-        pr_info("[anc] Netlink touch down!");
+        pr_debug("[anc] Netlink touch down!");
         netlink_send_message_to_user(&netlink_msg, sizeof(netlink_msg));
         lasttouchmode = tp_info->touch_state;
     } else {
         netlink_msg = (char)ANC_NETLINK_EVENT_TOUCH_UP;
-        pr_info("[anc] Netlink touch up!");
+        pr_debug("[anc] Netlink touch up!");
         netlink_send_message_to_user(&netlink_msg, sizeof(netlink_msg));
         lasttouchmode = tp_info->touch_state;
     }
@@ -245,21 +245,21 @@ static int anc_fb_state_chg_callback(struct notifier_block *nb,
     char netlink_msg = (char)ANC_NETLINK_EVENT_INVALID;
     int rc = 0;
 
-    pr_info("[anc] %s\n", __func__);
+    pr_debug("[anc] %s\n", __func__);
 
     anc_data = container_of(nb, struct anc_data, notifier);
 
     if (val == MSM_DRM_ONSCREENFINGERPRINT_EVENT) {
         uint8_t op_mode = 0x0;
         op_mode = *(uint8_t *)evdata->data;
-        pr_info("[anc] op_mode = %d\n", op_mode);
+        pr_debug("[anc] op_mode = %d\n", op_mode);
 
         switch (op_mode) {
             case ANC_UI_DISAPPREAR:
-                pr_info("[anc] UI disappear\n");
+                pr_debug("[anc] UI disappear\n");
                 break;
             case ANC_UI_READY:
-                pr_info("[anc] UI ready\n");
+                pr_debug("[anc] UI ready\n");
                 netlink_msg = ANC_NETLINK_EVENT_UI_READY;
                 netlink_send_message_to_user(&netlink_msg, sizeof(netlink_msg));
                 break;
@@ -297,13 +297,13 @@ static int anc_fb_state_chg_callback(struct notifier_block *nb,
             case MSM_DRM_BLANK_POWERDOWN:
                 anc_data->fb_black = 1;
                 netlink_msg = ANC_NETLINK_EVENT_SCR_OFF;
-                pr_info("[anc] NET SCREEN OFF!\n");
+                pr_debug("[anc] NET SCREEN OFF!\n");
                 netlink_send_message_to_user(&netlink_msg, sizeof(netlink_msg));
                 break;
             case MSM_DRM_BLANK_UNBLANK:
                 anc_data->fb_black = 0;
                 netlink_msg = ANC_NETLINK_EVENT_SCR_ON;
-                pr_info("[anc] NET SCREEN ON!\n");
+                pr_debug("[anc] NET SCREEN ON!\n");
                 netlink_send_message_to_user(&netlink_msg, sizeof(netlink_msg));
                 break;
             default:
@@ -326,7 +326,7 @@ static ssize_t forward_netlink_event_set(struct device *p_dev,
 {
     char netlink_msg = (char)ANC_NETLINK_EVENT_INVALID;
 
-    pr_info("forward netlink event: %s\n", p_buffer);
+    pr_debug("forward netlink event: %s\n", p_buffer);
     if (!strncmp(p_buffer, "test", strlen("test"))) {
         netlink_msg = (char)ANC_NETLINK_EVENT_TEST;
     } else if (!strncmp(p_buffer, "irq", strlen("irq"))) {
@@ -419,7 +419,7 @@ static ssize_t hw_reset_set(struct device *dev, struct device_attribute *attr, c
     struct anc_data *data = dev_get_drvdata(dev);
 
     if (!strncmp(buf, "reset", strlen("reset"))) {
-        pr_info("hw_reset\n");
+        pr_debug("hw_reset\n");
         rc = anc_reset(data);
     } else {
         rc = -EINVAL;
@@ -475,7 +475,7 @@ static DEVICE_ATTR(hw_reset, S_IWUSR, NULL, hw_reset_set);
 
 static void anc_power_onoff(struct anc_data *data, int power_onoff)
 {
-    pr_info("%s: power_onoff = %d \n", __func__, power_onoff);
+    pr_debug("%s: power_onoff = %d \n", __func__, power_onoff);
 #ifdef ANC_USE_POWER_GPIO
     gpio_set_value(data->pwr_gpio, power_onoff);
 #else
@@ -485,7 +485,7 @@ static void anc_power_onoff(struct anc_data *data, int power_onoff)
 
 static void device_power_up(struct anc_data *data)
 {
-    pr_info("device power up\n");
+    pr_debug("device power up\n");
     anc_power_onoff(data, 1);
 }
 
@@ -499,10 +499,10 @@ static ssize_t device_power_set(struct device *dev, struct device_attribute *att
 
     mutex_lock(&data->lock);
     if (!strncmp(buf, "on", strlen("on"))) {
-        pr_info("device power on\n");
+        pr_debug("device power on\n");
         anc_power_onoff(data, 1);
     } else if (!strncmp(buf, "off", strlen("off"))) {
-        pr_info("device power off\n");
+        pr_debug("device power off\n");
         anc_power_onoff(data, 0);
     } else {
         rc = -EINVAL;
@@ -531,7 +531,7 @@ static DEVICE_ATTR(sensor_id, S_IRUSR, sensor_id_show, NULL);
 #ifdef ANC_USE_IRQ
 static void anc_enable_irq(struct anc_data *data)
 {
-    pr_info("enable irq\n");
+    pr_debug("enable irq\n");
     if (atomic_read(&data->irq_enabled)) {
         pr_warn("IRQ has been enabled\n");
     } else {
@@ -542,7 +542,7 @@ static void anc_enable_irq(struct anc_data *data)
 
 static void anc_disable_irq(struct anc_data *data)
 {
-    pr_info("disable irq\n");
+    pr_debug("disable irq\n");
     if (atomic_read(&data->irq_enabled)) {
         disable_irq(data->irq);
         atomic_set(&data->irq_enabled, 0);
@@ -609,7 +609,7 @@ static irqreturn_t anc_irq_handler(int irq, void *handle)
 {
     struct anc_data *data = handle;
 
-    pr_info("irq handler\n");
+    pr_debug("irq handler\n");
 #ifdef ANC_CONFIG_PM_WAKELOCKS
     __pm_wakeup_event(&data->fp_wakelock, msecs_to_jiffies(ANC_WAKELOCK_HOLD_TIME));
 #else
@@ -750,34 +750,34 @@ static long anc_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
     if (_IOC_TYPE(cmd) != ANC_IOC_MAGIC)
         return -ENOTTY;
 
-    pr_info("%s: cmd = %d\n", __func__, _IOC_NR(cmd));
+    pr_debug("%s: cmd = %d\n", __func__, _IOC_NR(cmd));
 
     switch (cmd) {
     case ANC_IOC_RESET:
-        pr_info("%s: reset\n", __func__);
+        pr_debug("%s: reset\n", __func__);
         rc = anc_reset(dev_data);
         break;
     case ANC_IOC_ENABLE_POWER:
-        pr_info("%s: enable power\n", __func__);
+        pr_debug("%s: enable power\n", __func__);
         anc_power_onoff(dev_data, 1);
         break;
     case ANC_IOC_DISABLE_POWER:
-        pr_info("%s: disable power\n", __func__);
+        pr_debug("%s: disable power\n", __func__);
         anc_power_onoff(dev_data, 0);
         break;
     case ANC_IOC_CLEAR_FLAG:
 #ifdef ANC_USE_NETLINK
         lasttouchmode = 0;
-        pr_info("%s: clear tp flag\n", __func__);
+        pr_debug("%s: clear tp flag\n", __func__);
 #endif
         break;
 #ifdef ANC_USE_IRQ
     case ANC_IOC_ENABLE_IRQ:
-        pr_info("%s: enable irq\n", __func__);
+        pr_debug("%s: enable irq\n", __func__);
         anc_enable_irq(dev_data);
         break;
     case ANC_IOC_DISABLE_IRQ:
-        pr_info("%s: disable irq\n", __func__);
+        pr_debug("%s: disable irq\n", __func__);
         anc_disable_irq(dev_data);
         break;
 #endif
@@ -821,7 +821,7 @@ static ssize_t anc_read(struct file *filp, char __user *buf, size_t count, loff_
     ssize_t status = 0;
     // struct anc_data *dev_data = filp->private_data;
 
-    pr_info("%s: count = %zu\n", __func__, count);
+    pr_debug("%s: count = %zu\n", __func__, count);
 
     if (count > SPI_BUFFER_SIZE) {
         return (-EMSGSIZE);
@@ -855,7 +855,7 @@ static ssize_t anc_write(struct file *filp, const char __user *buf, size_t count
     ssize_t status = 0;
     // struct anc_data *dev_data = filp->private_data;
 
-    pr_info("%s: count = %zu\n", __func__, count);
+    pr_debug("%s: count = %zu\n", __func__, count);
 
     if (count > SPI_BUFFER_SIZE) {
         return (-EMSGSIZE);
@@ -913,10 +913,10 @@ static uint32_t anc_read_sensor_id(struct anc_data *data)
         }
 
         sensor_chip_id = (uint32_t)((spi_buffer[3] & 0x00FF) | ((spi_buffer[2] << 8) & 0xFF00));
-        pr_info("%s: sensor chip_id = %#x\n", __func__, sensor_chip_id);
+        pr_debug("%s: sensor chip_id = %#x\n", __func__, sensor_chip_id);
 
         if (sensor_chip_id == 0x6311) {
-            pr_info("%s: Read Sensor Id Success\n", __func__);
+            pr_debug("%s: Read Sensor Id Success\n", __func__);
             return 0;
         } else {
             pr_err("%s: Read Sensor Id Fail\n", __func__);
@@ -1142,7 +1142,7 @@ static int __init ancfp_init(void)
     rc = platform_driver_register(&anc_driver);
 #endif
     if (!rc) {
-        pr_info("%s OK\n", __func__);
+        pr_debug("%s OK\n", __func__);
     } else {
         pr_err("%s %d\n", __func__, rc);
     }
@@ -1154,7 +1154,7 @@ static int __init ancfp_init(void)
     */
 
     opticalfp_irq_handler_register(anc_opticalfp_tp_handler);
-    pr_info("register tp event handler");
+    pr_debug("register tp event handler");
 #endif
 
     return rc;
@@ -1162,7 +1162,7 @@ static int __init ancfp_init(void)
 
 static void __exit ancfp_exit(void)
 {
-    pr_info("%s\n", __func__);
+    pr_debug("%s\n", __func__);
 #ifdef ANC_USE_NETLINK
     anc_netlink_exit();
 #endif

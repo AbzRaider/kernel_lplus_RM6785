@@ -100,6 +100,6 @@ void egis_netlink_exit(void)
 		nl_sk = NULL;
 	}
 
-	pr_info("self module exited\n");
+	pr_debug("self module exited\n");
 }
 

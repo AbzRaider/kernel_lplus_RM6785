@@ -188,7 +188,7 @@ static int device_ioctl(struct inode *inp, struct file *filp, unsigned int cmd,
     int retval = 0;
     struct syna_tcm_data *tcm_info = g_device_hcd->tcm_info;
 
-    pr_info("%s: 0x%x\n", __func__, cmd);
+    pr_debug("%s: 0x%x\n", __func__, cmd);
 
     mutex_lock(&g_device_hcd->extif_mutex);
 
@@ -332,7 +332,7 @@ static ssize_t device_write(struct file *filp, const char __user *buf,
 
     LOCK_BUFFER(g_device_hcd->resp);
 
-    pr_info("%s: cmd 0x%x\n", __func__, g_device_hcd->out.buf[0]);
+    pr_debug("%s: cmd 0x%x\n", __func__, g_device_hcd->out.buf[0]);
     if (g_device_hcd->raw_mode) {
         retval = g_device_hcd->write_message(tcm_info,
                                              g_device_hcd->out.buf[0],
